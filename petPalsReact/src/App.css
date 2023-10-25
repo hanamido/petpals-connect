@@ -23,7 +23,6 @@
 .Navbar .Left {
   flex: 10%;
   background-color: #aa00e6;
-  padding-left: 3%;
   justify-content: left;
 }
 
@@ -75,14 +74,19 @@
 .iconLarge {
   height: 30px;
   width: 30px;
-  padding-left: 10px;
+  padding: 10px;
 }
 
 .iconSmall {
   height: 10px;
   width: 10px;
 }
-
+a {
+  display: inline-block;
+}
+a:hover, button:hover {
+  transform: scale(1.1);
+}
 input {
   border-radius: 10px;
   color: black;
