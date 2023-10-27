@@ -11,7 +11,7 @@ const petsRouter = express.Router();
 
 /* PETS ROUTES */
 petsRouter.get("/", async (req, res) => {
-  // TODO: Display all pets in the app (get data from database to pass to frontend)
+  // Display all pets in the app (get data from database to pass to frontend)
   // Declare query1
   let showPetsQuery;
 

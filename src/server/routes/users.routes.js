@@ -10,7 +10,7 @@ usersRouter.post("/signup", (req, res) => {
 })
 
 usersRouter.get("/:user_id", (req, res) => {
-  // Gets info for one user once they are logged in
+  // Gets info for one user from the database once they are logged in
   // Declare query1
   let showUserQuery;
 

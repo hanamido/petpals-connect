@@ -9,7 +9,7 @@ adminRouter.post("/signup", (req, res) => {
 })
 
 adminRouter.get("/:admin_id", (req, res) => {
-  // Gets details about one admin
+  // Gets info from database about admin to pass to frontend
   // Declare query1
   let showUserQuery;
 
