@@ -13,9 +13,9 @@ const { adminRouter } = require('./routes/admin.routes');
 // make sure we can parse the body of requests
 app.use(bodyParser.json());
 
-// set up routes
+// set up routes for each section
 app.use('/pets', petsRouter);
-app.use('/users', usersRouter);
+app.use('/account', usersRouter);
 app.use('/admin', adminRouter);
 
 ViteExpress.listen(app, 3000, () =>
