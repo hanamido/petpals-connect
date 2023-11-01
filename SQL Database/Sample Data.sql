@@ -34,10 +34,10 @@ VALUES ('German Shepherd', (SELECT type_id FROM Types WHERE type_name = 'Dog')),
 
 -- Adds sample data to Animals table
 INSERT INTO Animals (name, animal_type, picture, animal_availability, description)
-VALUES ('Orion', (SELECT type_id FROM Types WHERE type_name = 'Dog'), 'N/A', (SELECT availability_id FROM Availability_Options WHERE description = 'Available'), 'I am a neutered male, black and white Siberian Husky. I am about 8 years old. I have been at the shelter since Oct 25, 2023.'),
-('Daffodil', (SELECT type_id FROM Types WHERE type_name = 'Dog'), 'N/A', (SELECT availability_id FROM Availability_Options WHERE description = 'Pending'), 'I am a spayed female, brown and tan Chihuahua. I am about 11 months old. I have been at the shelter since Oct 9, 2023.'),
-('Mochi', (SELECT type_id FROM Types WHERE type_name = 'Cat'), 'N/A', (SELECT availability_id FROM Availability_Options WHERE description = 'Available'), 'I am a neutered male, orange and white Domestic Shorthair. I am about 6 months old. I have been at the shelter since Oct 4, 2023.'),
-('Latte', (SELECT type_id FROM Types WHERE type_name = 'Other'), 'N/A', (SELECT availability_id FROM Availability_Options WHERE description = 'Adopted'), 'I am a neutered male, white English Spot. I am about 5 months old. I have been at the shelter since Oct 29, 2023.');
+VALUES ('Orion', (SELECT type_id FROM Types WHERE type_name = 'Dog'), 'Orion.jpeg', (SELECT availability_id FROM Availability_Options WHERE description = 'Available'), 'I am a neutered male, black and white Siberian Husky. I am about 8 years old. I have been at the shelter since Oct 25, 2023.'),
+('Daffodil', (SELECT type_id FROM Types WHERE type_name = 'Dog'), 'Daffodil.jpeg', (SELECT availability_id FROM Availability_Options WHERE description = 'Pending'), 'I am a spayed female, brown and tan Chihuahua. I am about 11 months old. I have been at the shelter since Oct 9, 2023.'),
+('Mochi', (SELECT type_id FROM Types WHERE type_name = 'Cat'), 'Mochi.jpeg', (SELECT availability_id FROM Availability_Options WHERE description = 'Available'), 'I am a neutered male, orange and white Domestic Shorthair. I am about 6 months old. I have been at the shelter since Oct 4, 2023.'),
+('Latte', (SELECT type_id FROM Types WHERE type_name = 'Other'), 'Latte.jpeg', (SELECT availability_id FROM Availability_Options WHERE description = 'Adopted'), 'I am a neutered male, white English Spot. I am about 5 months old. I have been at the shelter since Oct 29, 2023.');
 
 -- Adds sample data to Animal_Breeds table
 INSERT INTO Animal_Breeds (animal_id, breed_id)
