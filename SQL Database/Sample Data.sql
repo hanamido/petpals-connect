@@ -59,3 +59,9 @@ INSERT INTO Applications (owner_id, animal_id)
 VALUES ((SELECT owner_id FROM Prospective_Owners WHERE first_name = 'Carlos' AND last_name = 'Wilson'), (SELECT animal_id FROM Animals WHERE name = 'Daffodil')),
 ((SELECT owner_id FROM Prospective_Owners WHERE first_name = 'Sylvia' AND last_name = 'Cordell'), (SELECT animal_id FROM Animals WHERE name = 'Mochi')),
 ((SELECT owner_id FROM Prospective_Owners WHERE first_name = 'Ida' AND last_name = 'Rutledge'), (SELECT animal_id FROM Animals WHERE name = 'Orion'));
+
+-- Adds sample data to Admins table
+INSERT INTO Admins (first_name, last_name, shelter_name)
+VALUES ('Patricia', 'Caskey', 'OC Animal Care'),
+('Irene', 'Knox', 'Oregon Humane Society'),
+('Robert', 'Shaw', 'SafeHaven Humane Society');

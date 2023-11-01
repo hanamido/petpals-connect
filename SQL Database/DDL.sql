@@ -113,6 +113,16 @@ CREATE TABLE Animal_Dispositions (
     FOREIGN KEY (animal_id) REFERENCES Animals(animal_id)
 ON DELETE CASCADE);
 
+-- Creates an Admin table
+DROP TABLE IF EXISTS Admins;
+CREATE TABLE Admins (
+	admin_id int NOT NULL AUTO_INCREMENT UNIQUE,
+    first_name varchar(50) NOT NULL,
+    last_name varchar(50) NOT NULL,
+    shelter_name varchar(100) NOT NULL,
+	PRIMARY KEY (admin_id)
+);
+
 -- Turn back on commits and foreign key checks
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
