@@ -55,6 +55,11 @@ usersRouter.put("/edit/:user_id", (req, res) => {
   // Send the new user details to frontend
 })
 
+usersRouter.delete("/delete/:user_id", (req, res) => {
+  // Delete a user given the user ID
+  // possible redirect to home page after success
+})
+
 // Export the users routes
 module.exports = {
   usersRouter: usersRouter
