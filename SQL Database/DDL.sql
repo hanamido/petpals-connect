@@ -1,4 +1,5 @@
--- CS367 - PetPals Connect
+-- Data Definition Queries
+-- CS467 - PetPals Connect
 -- Breanna Tran, Alyssa Feutz, Hanami Do, Julian Macleod
 
 -- Disable commits and foreign key checks
