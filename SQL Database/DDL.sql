@@ -1,4 +1,4 @@
--- CS367 - PetPals Connect
+-- CS467 - PetPals Connect
 -- Breanna Tran, Alyssa Feutz, Hanami Do, Julian Macleod
 
 -- Disable commits and foreign key checks
