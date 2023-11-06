@@ -6,7 +6,6 @@ const clientSecret = process.env.API_SECRET;
 
 // Database stuff
 const db = require('../database/db-connector');
-
 const petsRouter = express.Router();
 
 /* PETS ROUTES */
@@ -15,46 +14,25 @@ petsRouter.get("/", async (req, res) => {
   // Declare query1
   let showPetsQuery;
 
-  // Perform a basic select to get all animals
+  // Perform a select to get all animals
   showPetsQuery = 'SELECT * from Animals';
+  showAllQuery = 'SELECT Animals.animal_id, Animals.name, Breeds.breed_name as animal_type, Animals.picture, Availability_Options.description as animal_availability, Animals.description, Dispositions.description as dispositions \
+  FROM ((Animals \
+          INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id) \
+          INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id \
+          INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id \
+          INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id \
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id);';
 
   // On Pets Card: Name, Type, Picture, Availability
   // For More Details: + Description
 
   // Run the query
-  db.pool.query(showPetsQuery, function (err, results, fields) {
+  db.pool.query(showAllQuery, function (err, results, fields) {
     // get all the pets in the database to pass to frontend
-    if (err) throw err;  // error handling
-    // send results to frontend
+    if (err) throw err; 
     res.send(results);
   })
-
-  /* GETS THE DATA FROM PETFINDERS API */
-  // Get the access token from the API
-  try {
-    const response = await axios.post('https://api.petfinder.com/v2/oauth2/token', {
-      grant_type: 'client_credentials',
-      client_id: clientId,
-      client_secret: clientSecret
-    });
-
-    const accessToken = response.data.access_token;
-
-    // Get the pets data from the API
-    try {
-      const response = await axios.get('https://api.petfinder.com/v2/animals?type=cat', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }});
-      const apiData = response.data;
-      res.json(apiData);
-    } catch (err) {
-      console.log("Error retrieving pets from API: ", err)
-    }
-
-  } catch (err) {
-    console.log("Error retrieving pets from API: ", err)
-  }
 })
 
 petsRouter.get("/search/:query", (req, res) => {
@@ -80,10 +58,13 @@ petsRouter.post("/add", (req, res) => {
   // Gets new pet info from frontend form and adds it to database
   let data = req.body;
   let name = data['name'];
+  // TODO: Get foreign key animal_type from Animal_Breeds
   let animal_type = data['animal-type'];
   let picture = data['picture'];
+  // TODO: Get foreign key animal_availability from Availability_Options
   let animal_availability = data['animal-availability'];
   let description = data['description'];
+  // TODO: Add dispositions to the pets
 
   // TODO: Figure out how to send picture as picture to display on frontend?
 
@@ -106,7 +87,9 @@ petsRouter.put("/edit/:pet_id", (req, res) => {
 
 petsRouter.delete("/delete/:pet_id", (req, res) => {
   // Delete a pet given the pet ID
+  let deletePetQuery = `DELETE FROM Animals WHERE animal_id = ${req.params.pet_id}`;
   // Send the new pet data to frontend
+  // db.pool.query(deletePetQuery, function (error, rows, fields) ...)
 })
 
 module.exports = {

@@ -47,6 +47,10 @@ adminRouter.put("/edit/:admin_id", (req, res) => {
   // Edit an admin given the admin ID
 })
 
+adminRouter.delete("/delete/admin_id", (req, res) => {
+  // Delete an admin user given the admin ID
+})
+
 module.exports = {
     adminRouter: adminRouter
 }
