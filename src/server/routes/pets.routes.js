@@ -11,26 +11,25 @@ const petsRouter = express.Router();
 /* PETS ROUTES */
 petsRouter.get("/", async (req, res) => {
   // Display all pets in the app (get data from database to pass to frontend)
-  // Declare query1
-  let showPetsQuery;
-
   // Perform a select to get all animals
-  showPetsQuery = 'SELECT * from Animals';
-  showAllQuery = 'SELECT Animals.animal_id, Animals.name, Breeds.breed_name as animal_type, Animals.picture, Availability_Options.description as animal_availability, Animals.description, Dispositions.description as dispositions \
-  FROM ((Animals \
+  let showAllQuery = 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
+	FROM ((Animals \
           INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id) \
           INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id \
           INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id \
           INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id \
-         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id);';
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id) \
+         INNER JOIN Types ON Animals.animal_type = Types.type_id \
+         group by animal_id;'
 
-  // On Pets Card: Name, Type, Picture, Availability
+  // On Pets Card: Name, Type, Breed, Picture, Availability, Dispositions
   // For More Details: + Description
 
   // Run the query
   db.pool.query(showAllQuery, function (err, results, fields) {
     // get all the pets in the database to pass to frontend
     if (err) throw err; 
+    let jsonResult = JSON.stringify(results);
     res.send(results);
   })
 })

@@ -3,8 +3,17 @@ const ViteExpress = require('vite-express');
 const axios = require('axios'); 
 // const session = require('express-session');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
+const corsOptions = {
+  origin: '*', 
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+}
 
 const app = express();
+
+app.use(cors(corsOptions))
 
 const { petsRouter } = require('./routes/pets.routes.js');
 const { usersRouter } = require('./routes/users.routes.js');

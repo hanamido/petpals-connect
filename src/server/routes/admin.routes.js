@@ -30,10 +30,10 @@ adminRouter.post("/signup", (req, res) => {
 adminRouter.get("/:admin_id", (req, res) => {
   // Gets info from database about admin to pass to frontend
   // Declare query1
-  let showUserQuery;
+  let showAdminQuery;
 
   // Perform SELECT based on admin_id
-  showUserQuery = `SELECT * from Admins where admin_id = ${req.params.admin_id}`;
+  showAdminQuery = `SELECT * from Admins where admin_id = ${req.params.admin_id}`;
   // Run the query
   db.pool.query(showAdminQuery, function (err, results, fields) {
     // get all the admins in the database to pass to frontend
