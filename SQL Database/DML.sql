@@ -82,6 +82,28 @@ UPDATE Animals SET name = :name_input, animal_type = :animal_type_dropdown, pict
 -- Admin user finds animal from table and selects delete button
 DELETE FROM Animals WHERE animal_id = :animal_id_associated_to_delete_button;
 
+-- READ: Show animals, their type, their breed, their availability, and their dispositions (as one property)
+SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ', ') as animalDisposition 
+	FROM ((Animals
+          INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id)
+          INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
+          INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id
+          INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
+         INNER JOIN Types ON Animals.animal_type = Types.type_id
+         group by animal_id;
+
+-- READ: Show an animal based on the animal_id
+SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ', ') as animalDisposition
+	FROM ((Animals
+          INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id)
+          INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
+          INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id
+          INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
+         INNER JOIN Types ON Animals.animal_type = Types.type_id
+         WHERE Animals.animal_id = :animal_id_in_request;
+
 
 -- -----------------------------------------------------
 -- Applications Entity

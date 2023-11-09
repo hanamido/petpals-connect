@@ -78,12 +78,12 @@ const [animals, setAnimals] = useState([]);
   headers.append('Accept', 'application/json');
   headers.append('Origin','http://localhost:3000');
 
-   // Fetch animal data from your server's API here
-   fetch("http://localhost:3000/pets", {
+  // Fetch animal data from your server's API here
+  fetch("http://localhost:3000/pets", {
     mode: 'cors',
     method: 'GET',
     headers: headers
-}) // Replace with your actual API endpoint
+  }) // Replace with your actual API endpoint
      .then((response) => response.json())
      .then((data) => setAnimals(data))
      .catch((error) => console.error("Error fetching animal data:", error));

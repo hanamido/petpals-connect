@@ -47,3 +47,4 @@ SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalT
          INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
          INNER JOIN Types ON Animals.animal_type = Types.type_id
          group by animal_id;
+        
