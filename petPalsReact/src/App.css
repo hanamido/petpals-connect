@@ -20,10 +20,14 @@
   align-items: center;
 }
 
-.Navbar .Left {
+.Navbar .Left a {
   flex: 10%;
   background-color: #aa00e6;
   justify-content: left;
+  font-family: "Roboto";
+  font-size: large;
+  font-weight: bold;
+  color: white;
 }
 
 .Navbar .Center {
@@ -62,8 +66,9 @@
 }
 
 .comingSoon {
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  border-radius: 1rem;
+  margin: 20px;
 }
 
 .icons {
@@ -93,6 +98,12 @@
   height: fit-content;
 }
 
+.homePagePic {
+border-radius: 1rem;
+box-shadow: 0px 10px 8px #999;
+
+}
+
 .animalCardImg {
   width: 100%;
   border-radius: 1rem 1rem 0 0;
@@ -116,6 +127,34 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.Form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+}
+
+.submitButton {
+  display: flex;
+  flex-direction: column;
+  color: #aa00e6;
+  background-color: white;
+  border-color:#aa00e6;
+  border-width: 3px;
+  margin: 10px;
+  align-items: center;
+}
+
 a {
   display: inline-block;
 }
@@ -130,6 +169,19 @@ input {
   font-weight: bold;
   font-size: large;
   padding-left: 10px;
+}
+
+select, input {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  border-color: #e7d5ef;
+  border-width: 3px;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }
 
 @media only screen and (max-width: 700px) {
