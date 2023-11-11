@@ -49,10 +49,10 @@ petsRouter.post("/add", (req, res) => {
   let data = req.body;
   let name = data['name'];
   // TODO: Get foreign key animal_type from Animal_Breeds
-  let animal_type = data['animal-type'];
+  let animal_type = data['animal_type'];
   let picture = data['picture'];
   // TODO: Get foreign key animal_availability from Availability_Options
-  let animal_availability = data['animal-availability'];
+  let animal_availability = data['animal_availability'];
   let description = data['description'];
   // TODO: Add dispositions to the pets
 

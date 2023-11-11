@@ -9,7 +9,7 @@ function Navbar() {
   return (
     <div className="Navbar">
       <img className="iconLarge" src={bone}></img>
-      <div className="Left">PetPals Connect</div>
+      <div className="Left"><a href="/">PetPals Connect</a></div>
       <div className="Center">
         <div className="pageLinks">
           <a href="/account">Login</a>
