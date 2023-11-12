@@ -1,8 +1,13 @@
 import React from "react";
+import {useNavigate} from 'react-router-dom';
 
 
 export default function AnimalCard(props) {
+  const navigate = useNavigate();
     const {imgSrc, animalName, animalType, animalBreed, animalDisposition, animalAvailability} = props;
+    const moreDetails = (animal) => {
+      navigate('/moreDetails', {state:{animal:animal}});
+  }
   return (
     <div className="animalCard">
       <img
@@ -20,6 +25,6 @@ export default function AnimalCard(props) {
         <li>Availability: {animalAvailability}</li>
         </ul>
       </p>
-      <button>Learn more about {animalName}</button>
+      <button  onClick={(e)=>{moreDetails(props)}}>Learn more about {animalName}</button>
     </div>
   );}

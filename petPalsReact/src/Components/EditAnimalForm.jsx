@@ -6,7 +6,7 @@ import * as yup from "yup";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
-function AddAnimalForm() {
+function EditAnimalForm() {
   const addSchema = yup.object().shape({
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
@@ -25,7 +25,7 @@ function AddAnimalForm() {
     reset
   } = useForm({ resolver: yupResolver(addSchema) });
 
-  // THIS IS WHERE THE POST REQUEST WILL GO 
+  // THIS IS WHERE THE PUT REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
@@ -57,7 +57,6 @@ function AddAnimalForm() {
 
   return (
     <div className="Form">
-      <h1>Add a new pet:</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
@@ -130,4 +129,4 @@ function AddAnimalForm() {
   );
 }
 
-export default AddAnimalForm;
+export default EditAnimalForm;
