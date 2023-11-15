@@ -1,12 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
-const axios = require('axios');
+const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
 const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
+
 const petsRouter = express.Router();
 
 /* PETS ROUTES */

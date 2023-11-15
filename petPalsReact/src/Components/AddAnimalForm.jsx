@@ -28,18 +28,16 @@ function AddAnimalForm() {
   // THIS IS WHERE THE POST REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    addSchema.validate(data);
-    let headers = new Headers();
-
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-    headers.append('Origin','http://localhost:3000');
+  const onSubmit = async data => {
 
     try {
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+
         // change API endpoint as needed 
-        const response = await fetch('/pets/add', {
+        const response = await fetch('http://localhost:3000/pets/add', {
             mode: 'cors',
             method: 'POST',
             headers: headers,
