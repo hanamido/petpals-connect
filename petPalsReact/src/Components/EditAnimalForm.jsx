@@ -6,13 +6,13 @@ import * as yup from "yup";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
-function AddAnimalForm() {
+function EditAnimalForm() {
   const addSchema = yup.object().shape({
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
     animal_disposition: yup.string().required("Animal disposition is required"),
-    animal_description: yup.string(),
+    animal_desription: yup.string(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -25,25 +25,22 @@ function AddAnimalForm() {
     reset
   } = useForm({ resolver: yupResolver(addSchema) });
 
-  // THIS IS WHERE THE POST REQUEST WILL GO 
+  // THIS IS WHERE THE PUT REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
-
+    console.log(data);
     try {
-      let headers = new Headers();
-
-      headers.append('Content-Type', 'application/json');
-      headers.append('Accept', 'application/json');
-
         // change API endpoint as needed 
-        const response = await fetch('http://localhost:3000/pets/add', {
+        const response = await fetch('/add', {
             mode: 'cors',
             method: 'POST',
-            headers: headers,
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
-          })
-
+          });
+    
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
           }
@@ -60,7 +57,6 @@ function AddAnimalForm() {
 
   return (
     <div className="Form">
-      <h1>Add a new pet:</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
@@ -77,7 +73,6 @@ function AddAnimalForm() {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
-          <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
 {/* TODO: update foreign key */}
@@ -134,4 +129,4 @@ function AddAnimalForm() {
   );
 }
 
-export default AddAnimalForm;
+export default EditAnimalForm;

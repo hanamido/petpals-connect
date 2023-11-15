@@ -9,6 +9,8 @@ import ContactUs from "./pages/contact";
 import DeletePet from "./pages/delete";
 import EditPet from "./pages/edit";
 import Home from "./pages/home";
+import EditForm from "./pages/editForm";
+import MoreDetails from "./pages/moreDetails";
 
 function App() {
   return (
@@ -16,13 +18,15 @@ function App() {
       <Navbar />
         <BrowserRouter>
           <Routes>
-                        <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/account" element={<Account />} />
             < Route path="/browse" element={<Browse/>}/>
             <Route path="/add" element={<AddPet />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/delete" element={<DeletePet />} />
             <Route path="/edit" element={<EditPet />} />
+            <Route path="/editForm" element={<EditForm/>}/>
+            <Route path="/moreDetails" element={<MoreDetails/>}/>
           </Routes>
         </BrowserRouter>
     </>
