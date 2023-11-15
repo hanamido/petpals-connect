@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed, addOtherAnimalBreed } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -83,28 +83,21 @@ petsRouter.post("/add", (req, res) => {
               res.sendStatus(400);
             } else {
               console.log(result);
-              // if it is not yet in the db, add it to Breeds first
+              // if it is not yet in the db, add it as "Other"
               const isEmptySet = result.length === 0;
               if (isEmptySet) {
-                let addBreed = insertBreed(animal_breed, animal_type);
+                addQuery4 = addOtherAnimalBreed(animalId, animal_breed)
                 // then add to Animal_Breeds
-                db.pool.query(addBreed, function(error, result, fields) {
+                db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
                     console.log(error)
                   } else {
-                    addQuery4 = addAnimalBreedQuery(animalId, animal_breed);
-                    db.pool.query(addQuery4, function(error, result, fields) {
-                      if (error) {
-                        console.log(error);
-                      } else {
-                        res.send(result)
-                      }
-                    })
+                    res.send(result);
                   }
                 })
               } else {
                 // otherwise go straight into adding to Animal_Breeds
-                addQuery4 = addAnimalBreedQuery(animalId);
+                addQuery4 = addAnimalBreedQuery(animalId, animal_breed);
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
                     console.log(error);

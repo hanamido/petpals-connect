@@ -31,6 +31,11 @@ function addAnimalBreedQuery(animalId, breedName) {
     return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id from Breeds WHERE breed_name = '${breedName}'), ${animalId});`
 }
 
+function addOtherAnimalBreed(animalId, breedName) {
+    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id FROM Breeds
+        WHERE breed_name = "Other" AND type_id = (SELECT type_id FROM Types WHERE type_name = '${breedName}'), ${animalId})`
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -50,5 +55,6 @@ module.exports = {
     addAnimalDispositionQuery: addAnimalDispositionQuery,
     addAnimalBreedQuery: addAnimalBreedQuery,
     checkIfBreedExists: checkIfBreedExists,
-    insertBreed: insertBreed
+    insertBreed: insertBreed,
+    addOtherAnimalBreed: addOtherAnimalBreed
 }
