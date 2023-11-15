@@ -29,15 +29,18 @@ function AddAnimalForm() {
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
-    console.log(data);
+    let headers = new Headers();
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    headers.append('Origin','http://localhost:3000');
+
     try {
         // change API endpoint as needed 
-        const response = await fetch('/add', {
+        const response = await fetch('/pets/add', {
             mode: 'cors',
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(data),
           });
     
@@ -73,6 +76,7 @@ function AddAnimalForm() {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
+          <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
 //TODO: update with foreign key
