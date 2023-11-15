@@ -23,8 +23,11 @@ function checkIfBreedExists(breedName) {
     return `SELECT * FROM Breeds WHERE breed_name = '${breedName}'`;
 }
 
+function insertBreed(breedName, animalType) {
+    return `INSERT INTO Breeds (breed_name, type_id) VALUES ('${breedName}', (SELECT type_id FROM Types WHERE type_name = '${animalType}'));`
+}
+
 function addAnimalBreedQuery(animalId, breedName) {
-    // Check if the breed exists first before executing
     return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id from Breeds WHERE breed_name = '${breedName}'), ${animalId});`
 }
 
@@ -46,5 +49,6 @@ module.exports = {
     addAnimalQuery: addAnimalQuery,
     addAnimalDispositionQuery: addAnimalDispositionQuery,
     addAnimalBreedQuery: addAnimalBreedQuery,
-    checkIfBreedExists: checkIfBreedExists
+    checkIfBreedExists: checkIfBreedExists,
+    insertBreed: insertBreed
 }

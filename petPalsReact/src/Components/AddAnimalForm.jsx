@@ -28,7 +28,9 @@ function AddAnimalForm() {
   // THIS IS WHERE THE POST REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
-  const onSubmit = async data => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    addSchema.validate(data);
     let headers = new Headers();
 
     headers.append('Content-Type', 'application/json');

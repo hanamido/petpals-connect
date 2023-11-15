@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const axios = require('axios');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -63,7 +63,6 @@ petsRouter.post("/add", (req, res) => {
       console.log(error);
       res.sendStatus(400);
     } else {
-      console.log(result);
       const animalId = result.insertId
 
       // Get animal dispositions and add it to Animal_Dispositions
@@ -73,17 +72,46 @@ petsRouter.post("/add", (req, res) => {
           console.log(error);
           res.sendStatus(400);
         } else {
-          console.log(result);
-          // get animal breed and add it to the Animal_Breeds table
-          let addQuery3 = addAnimalBreedQuery(animalId, animal_breed);
-          // TODO: check if breed is already in db
+          // Checks if the breed is already in the db
+          let addQuery3 = checkIfBreedExists(animal_breed);
+          // placeholder query
+          let addQuery4;
           db.pool.query(addQuery3, function(error, result, fields) {
             if (error) {
               console.log(error);
               res.sendStatus(400);
             } else {
               console.log(result);
-              res.send(result);
+              // if it is not yet in the db, add it to Breeds first
+              const isEmptySet = result.length === 0;
+              if (isEmptySet) {
+                let addBreed = insertBreed(animal_breed, animal_type);
+                // then add to Animal_Breeds
+                db.pool.query(addBreed, function(error, result, fields) {
+                  if (error) {
+                    console.log(error)
+                  } else {
+                    addQuery4 = addAnimalBreedQuery(animalId, animal_breed);
+                    db.pool.query(addQuery4, function(error, result, fields) {
+                      if (error) {
+                        console.log(error);
+                      } else {
+                        res.send(result)
+                      }
+                    })
+                  }
+                })
+              } else {
+                // otherwise go straight into adding to Animal_Breeds
+                addQuery4 = addAnimalBreedQuery(animalId);
+                db.pool.query(addQuery4, function(error, result, fields) {
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    res.send(result)
+                  }
+                })
+              }
             }
           })
         }
