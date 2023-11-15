@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
-
+const { addAdminQuery } = require('../controllers/adminController');
+ 
 const adminRouter = express.Router();
 
 // db stuff
@@ -11,18 +12,18 @@ adminRouter.post("/signup", (req, res) => {
   // Gets info from frontend form to pass to database
   // Receives user info from frontend to pass to database
   let data = req.body;
-  let first_name = data['first-name'];
-  let last_name = data['last-name'];
-  let shelter_name = data['shelter_name'];
+  let firstName = data['first_name'];
+  let lastName = data['last_name'];
+  let shelterName = data['shelter_name'];
 
   // create query and run it
-  let query = `INSERT INTO Admins (${first_name}, ${last_name}, ${shelter_name})`;
-  db.pool.query(query, function(error, rows, fields) {
+  let query = addAdminQuery(firstName, lastName, shelterName);
+  db.pool.query(query, function(error, result, fields) {
     if (error) {
       console.log(error);
       res.sendStatus(400);
     } else {
-      res.redirect('/');
+      res.send(result)
     }
   })
 })

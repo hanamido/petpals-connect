@@ -27,11 +27,12 @@ function AddAdminForm() {
     console.log(data);
     try {
         // change API endpoint as needed 
-        const response = await fetch('/add', {
+        const response = await fetch('http://localhost:3000/admin/signup', {
             mode: 'cors',
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Accept': 'application/json',
             },
             body: JSON.stringify(data),
           });
