@@ -8,7 +8,7 @@ const adminRouter = express.Router();
 const db = require('../database/db-connector');
 
 /* ADMIN ROUTES */
-adminRouter.post("/signup", (req, res) => {
+adminRouter.post("/add", (req, res) => {
   // Gets info from frontend form to pass to database
   // Receives user info from frontend to pass to database
   let data = req.body;

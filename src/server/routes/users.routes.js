@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
-const homeRouter = require('../main');
+const { addUserQuery } = require('../controllers/usersController');
 
 const usersRouter = express.Router();
 
@@ -9,26 +9,26 @@ const usersRouter = express.Router();
 const db = require('../database/db-connector');
 
 /* USERS ROUTES */
-usersRouter.post("/signup", (req, res) => {
+usersRouter.post("/add", (req, res) => {
   // Receives user info from frontend to pass to database
   let data = req.body;
-  let first_name = data['first-name'];
-  let last_name = data['last-name'];
-  let phone_number = data['phone-number'];
+  let firstName = data['first_name'];
+  let lastName = data['last_name'];
+  let phoneNumber = data['phone_number'];
   let email = data['email'];
   let street = data['street'];
   let city = data['city'];
   let state = data['state'];
-  let zip_code = data['zip-code'];
+  let zipCode = data['zip_code'];
 
   // create query and run it
-  let query = `INSERT INTO Prospective_Owners (${first_name}, ${last_name}, ${phone_number}, ${email}, ${street}, ${city}, ${state}, ${zip_code})`;
-  db.pool.query(query, function(error, rows, fields) {
+  let query = addUserQuery(firstName, lastName, phoneNumber, email, street, city, state, zipCode);
+  db.pool.query(query, function(error, result, fields) {
     if (error) {
       console.log(error);
       res.sendStatus(400);
     } else {
-      res.redirect(homeRouter);
+      res.send(result);
     }
   })
 })
