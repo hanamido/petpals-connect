@@ -12,7 +12,7 @@ function AddAnimalForm() {
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
     animal_disposition: yup.string().required("Animal disposition is required"),
-    animal_desription: yup.string(),
+    animal_description: yup.string(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -42,8 +42,8 @@ function AddAnimalForm() {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(data),
-          });
-    
+          })
+
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
           }
@@ -51,9 +51,9 @@ function AddAnimalForm() {
           const result = await response.json();
 
           reset();
-        } catch (error) {
-          console.error('Error with form submission', error);
-        }
+      } catch (error) {
+        console.error('Error with form submission', error);
+      }
     }
 /// END INTEGRATION SECTION
 
@@ -79,7 +79,7 @@ function AddAnimalForm() {
           <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
-//TODO: update with foreign key
+{/* //TODO: update with foreign key */}
         <input
           type="text"
           placeholder="Animal Breed..."
@@ -93,14 +93,14 @@ function AddAnimalForm() {
           {...register("animal_disposition")}
           className="input"
         >
-//TODO: Update dispositions as needed with pets.routes.js
+{/* //TODO: Update dispositions as needed with pets.routes.js */}
           <option value="">Select Disposition</option>
           <option value="Animal must be leashed at all times">Animal must be leashed at all times</option>
           <option value="Good with other animals">Good with other animals</option>
           <option value="Good with children">Good with children</option>
         </select>
         <p>{errors.animal_disposition?.message}</p>
-// TODO: update foreign key
+{/* // TODO: update foreign key */}
         <select
           placeholder="Animal Availability..."
           {...register("animal_availability")}

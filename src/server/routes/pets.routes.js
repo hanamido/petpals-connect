@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const axios = require('axios');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -48,22 +48,46 @@ petsRouter.post("/add", (req, res) => {
   // Gets new pet info from frontend form and adds it to database
   let data = req.body;
   let name = data['name'];
-  // TODO: Get foreign key animal_type from Animal_Breeds
   let animal_type = data['animal_type'];
   let picture = data['picture'];
-  // TODO: Get foreign key animal_availability from Availability_Options
   let animal_availability = data['animal_availability'];
-  let description = data['description'];
-  // TODO: Add dispositions to the pets
+  let animal_description = data['description'];
+  let animal_disposition = data['animal_disposition'];
+  let animal_breed = data['animal_breed'];
 
-  // Create the query and run it on the db
-  const query = `INSERT INTO Animals (${name}, ${animal_type}, ${picture}, ${animal_availability}, ${description})`;
-  db.pool.query(query, function(error, result, fields) {
+  // Create the general add query and run it on the db
+  let addQuery = addAnimalQuery(name, animal_type, picture, animal_availability, animal_description);
+
+  db.pool.query(addQuery, function(error, result, fields) {
     if (error) {
       console.log(error);
       res.sendStatus(400);
     } else {
-      res.redirect('/');
+      console.log(result);
+      const animalId = result.insertId
+
+      // Get animal dispositions and add it to Animal_Dispositions
+      let addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
+      db.pool.query(addQuery2, function(error, result, fields) {
+        if (error) {
+          console.log(error);
+          res.sendStatus(400);
+        } else {
+          console.log(result);
+          // get animal breed and add it to the Animal_Breeds table
+          let addQuery3 = addAnimalBreedQuery(animalId, animal_breed);
+          // TODO: check if breed is already in db
+          db.pool.query(addQuery3, function(error, result, fields) {
+            if (error) {
+              console.log(error);
+              res.sendStatus(400);
+            } else {
+              console.log(result);
+              res.send(result);
+            }
+          })
+        }
+      })
     }
   })
 })

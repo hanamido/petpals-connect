@@ -10,6 +10,24 @@ function showOneAnimalQuery(animalId) {
          WHERE Animals.animal_id = ${animalId};`
 }
 
+function addAnimalQuery(name, animal_type, picture, animal_availability, description) {
+    return `INSERT INTO Animals (name, animal_type, picture, animal_availability, description)
+    VALUES ("${name}", (SELECT type_id FROM Types WHERE type_name = "${animal_type}"), "${picture}", (SELECT availability_id FROM Availability_Options WHERE description = "${animal_availability}"), "${description}");`
+}
+
+function addAnimalDispositionQuery(animalId, dispositionName) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${dispositionName}'), ${animalId});`
+}
+
+function checkIfBreedExists(breedName) {
+    return `SELECT * FROM Breeds WHERE breed_name = '${breedName}'`;
+}
+
+function addAnimalBreedQuery(animalId, breedName) {
+    // Check if the breed exists first before executing
+    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id from Breeds WHERE breed_name = '${breedName}'), ${animalId});`
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -24,5 +42,9 @@ let animalsQueries = {
 
 module.exports = {
     animalsQueries: animalsQueries,
-    showOneAnimalQuery: showOneAnimalQuery
+    showOneAnimalQuery: showOneAnimalQuery,
+    addAnimalQuery: addAnimalQuery,
+    addAnimalDispositionQuery: addAnimalDispositionQuery,
+    addAnimalBreedQuery: addAnimalBreedQuery,
+    checkIfBreedExists: checkIfBreedExists
 }
