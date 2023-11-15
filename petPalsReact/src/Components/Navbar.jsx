@@ -15,9 +15,8 @@ function Navbar() {
           <a href="/account">Login</a>
           <a href="/browse">Browse Pets</a>
           <a href="/contact">Contact Us</a>
-          {isAccountAdmin ? <a href="/add">Add Pet</a> : null}
-          {isAccountAdmin ? <a href="/edit">Edit Pet</a> : null}
-          {isAccountAdmin ? <a href="/delete">Delete Pet</a> : null}
+          {isAccountAdmin ? <a href="/add">Add Profile</a> : null}
+          {isAccountAdmin ? <a href="/delete">Edit or Delete Pet</a> : null}
         </div>
       </div>
       <div className="Search">
