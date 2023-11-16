@@ -14,7 +14,7 @@ function EditForm() {
     <div>
       <h1>Editing {animal.animalName}</h1>
       {/*Might need to update to pass animal id to EditAnimal Form?*/}
-      <EditAnimalForm />
+      <EditAnimalForm animal={animal} />
     </div>
   );
 }

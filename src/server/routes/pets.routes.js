@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed, addOtherAnimalBreed } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, addOtherAnimalBreed, deleteAnimalQuery } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -121,9 +121,15 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
 
 petsRouter.delete("/delete/:animal_id", (req, res) => {
   // Delete a pet given the animal ID
-  let deletePetQuery = `DELETE FROM Animals WHERE animal_id = ${req.params.animal_id}`;
   // Send the new pet data to frontend
-  // db.pool.query(deletePetQuery, function (error, rows, fields) ...)
+  let deleteQuery = deleteAnimalQuery(req.params.animal_id)
+  db.pool.query(deleteQuery, function (error, result, fields) {
+    if (error) {
+      console.log(error);
+    } else {
+      res.send(result);
+    }
+  })
 })
 
 module.exports = {

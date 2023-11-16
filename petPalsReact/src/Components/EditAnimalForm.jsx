@@ -6,7 +6,8 @@ import * as yup from "yup";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
-function EditAnimalForm() {
+function EditAnimalForm({ animal }) {
+  console.log(animal);
   const addSchema = yup.object().shape({
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
@@ -60,9 +61,9 @@ function EditAnimalForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
-          placeholder="Animal Name..."
           {...register("name")}
           className="input"
+          defaultValue={animal.animalName}
         />
         <p>{errors.name?.message}</p>
         <select
@@ -73,6 +74,7 @@ function EditAnimalForm() {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
+          <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
 {/* TODO: update foreign key */}
@@ -81,6 +83,7 @@ function EditAnimalForm() {
           placeholder="Animal Breed..."
           {...register("animal_breed")}
           className="input"
+          defaultValue={animal.animalBreed}
         />
         <p>{errors.animal_breed?.message}</p>
 
@@ -113,6 +116,7 @@ function EditAnimalForm() {
           placeholder="Animal Description..."
           {...register("animal_description")}
           className="input"
+          defaultValue={animal.animalDescription}
         />
         <div className="input">
           <label>Upload photo (optional): </label>

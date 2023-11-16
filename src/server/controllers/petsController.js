@@ -36,6 +36,11 @@ function addOtherAnimalBreed(animalId, breedName) {
         WHERE breed_name = "Other" AND type_id = (SELECT type_id FROM Types WHERE type_name = '${breedName}'), ${animalId})`
 }
 
+function deleteAnimalQuery(animalId) {
+    let deletePetQuery = `DELETE FROM Animals WHERE animal_id = ${animalId}`;
+    return deletePetQuery;
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -56,5 +61,6 @@ module.exports = {
     addAnimalBreedQuery: addAnimalBreedQuery,
     checkIfBreedExists: checkIfBreedExists,
     insertBreed: insertBreed,
-    addOtherAnimalBreed: addOtherAnimalBreed
+    addOtherAnimalBreed: addOtherAnimalBreed,
+    deleteAnimalQuery: deleteAnimalQuery,
 }

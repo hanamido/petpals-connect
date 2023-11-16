@@ -20,7 +20,7 @@ function ViewAnimalData() {
         mode: 'cors',
         method: 'GET',
         headers: headers
-      }) // R
+      }) 
          .then((response) => response.json())
          .then((data) => setAnimals(data))
          .catch((error) => console.error("Error fetching animal data:", error));
@@ -40,28 +40,28 @@ function ViewAnimalData() {
         
         alert("Delete clicked")
         console.log(data);
-        // try {
-        //     // change API endpoint and animal.id variable as needed 
-        //     const response = await fetch('/delete/' + animalIdVariable, {
-        //         mode: 'cors',
-        //         method: 'DELETE',
-        //         headers: {
-        //           'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(data),
-        //       });
+        try {
+            // change API endpoint and animal.id variable as needed 
+            const response = await fetch(`http://localhost:3000/pets/delete/${data.animal_id}`, {
+                mode: 'cors',
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+              });
         
-        //       if (!response.ok) {
-        //         throw new Error(`Error: ${response.status}`);
-        //       }
+              if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+              }
         
-        //       const result = await response.json();
-        //       alert("Pet has been deleted!")
-        //       reset();
-        //     } catch (error) {
-        //         alert("Submission failed. Please try again.")
-        //       console.error('Error with form submission', error);
-        //     }
+              const result = await response.json();
+              alert("Pet has been deleted!")
+              reset();
+            } catch (error) {
+              alert("Submission failed. Please try again.")
+              console.error('Error with form submission', error);
+            }
         }
     /// END INTEGRATION SECTION
 
@@ -85,7 +85,7 @@ function ViewAnimalData() {
         </thead>
         <tbody>
           {animals.map((animal) => (
-            <tr key={animal.animalName}>
+            <tr key={animal.animal_id}>
               <td>{animal.animalName}</td>
               <td>{animal.animalType}</td>
               <td>{animal.animalBreed}</td>
