@@ -37,8 +37,6 @@ function ViewAnimalData() {
       // Please feel free to ammend in any way that works for middleware integration
       // Probably replace data with animal.id?
       const onSubmit = async (data) => {
-        
-        alert("Delete clicked")
         console.log(data);
         try {
             // change API endpoint and animal.id variable as needed 
@@ -55,11 +53,16 @@ function ViewAnimalData() {
                 throw new Error(`Error: ${response.status}`);
               }
         
-              const result = await response.json();
-              alert("Pet has been deleted!")
-              reset();
+              const result = await response.json()
+                .then(result => {
+                  alert("Pet has been deleted!");
+                })
+              window.location.reload();
+              // alert("Pet has been deleted!")
+              // reset();
+
             } catch (error) {
-              alert("Submission failed. Please try again.")
+                alert("Submission failed. Please try again.")
               console.error('Error with form submission', error);
             }
         }
