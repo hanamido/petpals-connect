@@ -71,6 +71,10 @@ SELECT type_name FROM Types WHERE type_id = given_type_id;
 -- Admin user types in info into input elements and selects from dropdowns
 INSERT INTO Animals (name, picture, description, animal_type, animal_availability) VALUES (:name_input, :picture_input, :description_input, :animal_type_dropdown, :animal_availability_dropdown);
 
+-- CREATE: Add new animal given the animal_type input and availability input
+INSERT INTO Animals (name, animal_type, picture, animal_availability, description)
+VALUES (:name_input, (SELECT type_id FROM Types WHERE type_name = :description), :image_input, (SELECT availability_id FROM Availability_Options WHERE description = :availability_input), :description_input)
+
 -- READ: Get all info in Animals table
 SELECT * FROM Animals;
 

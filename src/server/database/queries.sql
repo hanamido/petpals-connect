@@ -47,4 +47,11 @@ SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalT
          INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
          INNER JOIN Types ON Animals.animal_type = Types.type_id
          group by animal_id;
-        
+
+-- Select the type_id by the type_name
+SELECT type_id FROM Types 
+    WHERE type_name = :type_dropdown
+
+-- Select the availability option by the ava
+SELECT availability_id FROM Availability_Options
+    WHERE description = :description_input

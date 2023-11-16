@@ -12,7 +12,7 @@ function AddAnimalForm() {
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
     animal_disposition: yup.string().required("Animal disposition is required"),
-    animal_desription: yup.string(),
+    animal_description: yup.string(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -29,18 +29,21 @@ function AddAnimalForm() {
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
-    console.log(data);
+
     try {
+      let headers = new Headers();
+
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+
         // change API endpoint as needed 
-        const response = await fetch('/add', {
+        const response = await fetch('http://localhost:3000/pets/add', {
             mode: 'cors',
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(data),
-          });
-    
+          })
+
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
           }
@@ -74,6 +77,7 @@ function AddAnimalForm() {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
+          <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
 {/* TODO: update foreign key */}
