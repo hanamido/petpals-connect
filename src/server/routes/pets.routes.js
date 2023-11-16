@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, addOtherAnimalBreed, deleteAnimalQuery, checkType } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, addOtherAnimalBreed, deleteAnimalQuery, checkType, editAnimalQuery, editAnimalBreed, editAnimalDisposition } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -122,6 +122,36 @@ petsRouter.post("/add", (req, res) => {
 petsRouter.put("/edit/:animal_id", (req, res) => {
   // Edit a pet given the pet ID
   // Send the new pet data to frontend
+  let data = req.body;
+  let name = data['name'];
+  let animal_type = data['animal_type'];
+  let picture = data['picture'];
+  let animal_availability = data['animal_availability'];
+  let animal_description = data['animal_description'];
+  let animal_disposition = data['animal_disposition'];
+  let animal_breed = data['animal_breed'];
+
+  // Declare general edit query
+  let query1 = editAnimalQuery(req.params.animal_id, name, animal_type, picture, animal_availability, animal_description)
+
+  // First send the query to update the animal
+  db.pool.query(query1, function(error, result, fields) {
+    if (error) {
+      console.log(error);
+      res.sendStatus(400);
+    }
+    else {
+      const query2 = editAnimalBreed(req.params.animal_id, animal_breed);
+      // Then update breeds through Animal_Breeds table
+      db.pool.query(query2, function(error, result, fields) {
+        console.log(result);
+        res.sendStatus(200);
+      })
+    }
+  })
+
+  // Update dispositions through Animal_Dispositions table
+  // Parse through dispositions by splitting sections divided by comma, if there is a comma
 })
 
 petsRouter.delete("/delete/:animal_id", (req, res) => {

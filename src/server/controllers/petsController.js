@@ -47,6 +47,27 @@ function deleteAnimalQuery(animalId) {
     return deletePetQuery;
 }
 
+function editAnimalQuery(animalId, animalName, animalType, animalPicture, animalAvailability, animalDescription) {
+    return `UPDATE Animals SET \
+	    name = "${animalName}", \
+        animal_type = (SELECT type_id FROM Types WHERE type_name = '${animalType}'), \
+        picture= "${animalPicture}", \
+        animal_availability=(SELECT availability_id FROM Availability_Options WHERE description = "${animalAvailability}"), \
+        description= "${animalDescription}" \
+    WHERE animal_id = ${animalId};`
+}
+
+function editAnimalDisposition(animalId, dispositionName) {
+    return `UPDATE Animal_Dispositions SET 
+        `
+}
+
+function editAnimalBreed(animalId, breedName) {
+    return `UPDATE Animal_Breeds SET
+    animal_id = ${animalId},
+    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = ${breedName});`;
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -70,4 +91,7 @@ module.exports = {
     addOtherAnimalBreed: addOtherAnimalBreed,
     deleteAnimalQuery: deleteAnimalQuery,
     checkType: checkType,
+    editAnimalQuery: editAnimalQuery,
+    editAnimalBreed: editAnimalBreed,
+    editAnimalDisposition: editAnimalDisposition,
 }
