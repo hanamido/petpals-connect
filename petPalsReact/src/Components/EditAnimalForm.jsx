@@ -111,12 +111,12 @@ function EditAnimalForm({ animal }) {
           <option value="Adopted">Adopted</option>
         </select>
         <p>{errors.animal_availability?.message}</p>
-        <input
-          type="text"
+        <textarea
           placeholder="Animal Description..."
           {...register("animal_description")}
           className="input"
           defaultValue={animal.animalDescription}
+          rows={4} cols={50}
         />
         <div className="input">
           <label>Upload photo (optional): </label>

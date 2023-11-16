@@ -113,11 +113,12 @@ function AddAnimalForm() {
           <option value="Adopted">Adopted</option>
         </select>
         <p>{errors.animal_availability?.message}</p>
-        <input
+        <textarea
           type="text"
           placeholder="Animal Description..."
           {...register("animal_description")}
           className="input"
+          rows={4} cols={50}
         />
         <div className="input">
           <label>Upload photo (optional): </label>
