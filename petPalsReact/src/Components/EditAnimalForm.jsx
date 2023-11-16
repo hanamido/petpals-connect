@@ -74,7 +74,7 @@ function EditAnimalForm({ animal }) {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
-          <option value="Other">Other</option>
+          <option value="Other"></option>
         </select>
         <p>{errors.animal_type?.message}</p>
 {/* TODO: update foreign key */}

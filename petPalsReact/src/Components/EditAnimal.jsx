@@ -57,9 +57,7 @@ function ViewAnimalData() {
                 .then(result => {
                   alert("Pet has been deleted!");
                 })
-              window.location.reload();
-              // alert("Pet has been deleted!")
-              // reset();
+              navigate("/");
 
             } catch (error) {
                 alert("Submission failed. Please try again.")
