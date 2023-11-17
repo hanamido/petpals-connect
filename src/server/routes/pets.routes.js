@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, insertBreed, addOtherAnimalBreed } = require('../controllers/petsController');
+const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, addOtherAnimalBreed, deleteAnimalQuery, checkType } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -52,7 +52,7 @@ petsRouter.post("/add", (req, res) => {
   let animal_type = data['animal_type'];
   let picture = data['picture'];
   let animal_availability = data['animal_availability'];
-  let animal_description = data['description'];
+  let animal_description = data['animal_description'];
   let animal_disposition = data['animal_disposition'];
   let animal_breed = data['animal_breed'];
 
@@ -83,10 +83,15 @@ petsRouter.post("/add", (req, res) => {
               res.sendStatus(400);
             } else {
               console.log(result);
-              // if it is not yet in the db, add it as "Other"
+              // if the breed (dog or cat) is not in the db, add it as "Other"
               const isEmptySet = result.length === 0;
+              // if it is not a dog or cat, add it as "Other" for type and breed
+              if (!checkType(animal_type)) {
+                animal_breed = "Other"
+                animal_type = "Other"
+              }
               if (isEmptySet) {
-                addQuery4 = addOtherAnimalBreed(animalId, animal_breed)
+                addQuery4 = addOtherAnimalBreed(animalId, animal_breed, animal_type)
                 // then add to Animal_Breeds
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
@@ -97,7 +102,7 @@ petsRouter.post("/add", (req, res) => {
                 })
               } else {
                 // otherwise go straight into adding to Animal_Breeds
-                addQuery4 = addAnimalBreedQuery(animalId, animal_breed);
+                addQuery4 = addAnimalBreedQuery(animalId, animal_breed, animal_type);
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
                     console.log(error);
@@ -121,9 +126,15 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
 
 petsRouter.delete("/delete/:animal_id", (req, res) => {
   // Delete a pet given the animal ID
-  let deletePetQuery = `DELETE FROM Animals WHERE animal_id = ${req.params.animal_id}`;
   // Send the new pet data to frontend
-  // db.pool.query(deletePetQuery, function (error, rows, fields) ...)
+  let deleteQuery = deleteAnimalQuery(req.params.animal_id)
+  db.pool.query(deleteQuery, function (error, result, fields) {
+    if (error) {
+      console.log(error);
+    } else {
+      res.send(result);
+    }
+  })
 })
 
 module.exports = {

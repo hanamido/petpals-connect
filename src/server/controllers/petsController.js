@@ -23,17 +23,28 @@ function checkIfBreedExists(breedName) {
     return `SELECT * FROM Breeds WHERE breed_name = '${breedName}'`;
 }
 
+function checkType(typeName) {
+    if (typeName !== "Dog" || typeName !== "Cat") {
+        return false;
+    }
+    return true;
+}
+
 function insertBreed(breedName, animalType) {
     return `INSERT INTO Breeds (breed_name, type_id) VALUES ('${breedName}', (SELECT type_id FROM Types WHERE type_name = '${animalType}'));`
 }
 
-function addAnimalBreedQuery(animalId, breedName) {
-    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id from Breeds WHERE breed_name = '${breedName}'), ${animalId});`
+function addAnimalBreedQuery(animalId, breedName, typeName) { 
+    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id from Breeds WHERE breed_name = '${breedName}' AND type_id = (SELECT type_id FROM Types WHERE type_name = '${typeName}')), ${animalId});`
 }
 
-function addOtherAnimalBreed(animalId, breedName) {
-    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id FROM Breeds
-        WHERE breed_name = "Other" AND type_id = (SELECT type_id FROM Types WHERE type_name = '${breedName}'), ${animalId})`
+function addOtherAnimalBreed(animalId, animalType) {
+    return `INSERT INTO Animal_Breeds (breed_id, animal_id) VALUES ((SELECT breed_id FROM Breeds WHERE breed_name = "Other" AND type_id = (SELECT type_id FROM Types WHERE type_name = '${animalType}')), ${animalId})`;
+}
+
+function deleteAnimalQuery(animalId) {
+    let deletePetQuery = `DELETE FROM Animals WHERE animal_id = ${animalId}`;
+    return deletePetQuery;
 }
 
 let animalsQueries = {
@@ -56,5 +67,7 @@ module.exports = {
     addAnimalBreedQuery: addAnimalBreedQuery,
     checkIfBreedExists: checkIfBreedExists,
     insertBreed: insertBreed,
-    addOtherAnimalBreed: addOtherAnimalBreed
+    addOtherAnimalBreed: addOtherAnimalBreed,
+    deleteAnimalQuery: deleteAnimalQuery,
+    checkType: checkType,
 }
