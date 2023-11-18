@@ -159,7 +159,7 @@ petsRouter.post("/add", (req, res) => {
       } else if (disposition3.length == 0) {
         addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
       } else {  // if all dispositions are selected
-        addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3)
+        addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3);
       }
 
       // Get animal dispositions and add it to Animal_Dispositions
@@ -244,8 +244,7 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
       })
     }
   })
-
-  // Update dispositions through Animal_Dispositions table
+  
   // TODO: check what format dispositions can be added as, perhaps disposition1, disposition2, disposition3? 
 
 })

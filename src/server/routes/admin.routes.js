@@ -44,6 +44,7 @@ adminRouter.get("/:admin_id", (req, res) => {
   })
 })
 
+/* Stretch Features */
 adminRouter.put("/edit/:admin_id", (req, res) => {
   // Edit an admin given the admin ID
 })
