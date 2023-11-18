@@ -96,15 +96,15 @@ function searchByBreed(breedName) {
 }
 
 function searchByDisposition(dispositionDesc) {
-    return `SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition
-	FROM Animals
-	JOIN Types ON Animals.animal_type = Types.type_id
-	LEFT JOIN Animal_Breeds ON Animals.animal_id = Animal_Breeds.animal_id
-	LEFT JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
-	LEFT JOIN Animal_Dispositions ON Animals.animal_id = Animal_Dispositions.animal_id
-	LEFT JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
-	JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id
-	WHERE Dispositions.description = '${dispositionDesc}'
+    return `SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
+	FROM Animals \
+	JOIN Types ON Animals.animal_type = Types.type_id \
+	LEFT JOIN Animal_Breeds ON Animals.animal_id = Animal_Breeds.animal_id \
+	LEFT JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id \
+	LEFT JOIN Animal_Dispositions ON Animals.animal_id = Animal_Dispositions.animal_id \
+	LEFT JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id \
+	JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id \
+	WHERE Dispositions.description = '${dispositionDesc}' \
     GROUP BY animal_id;`;
 }
 
