@@ -153,7 +153,7 @@ petsRouter.post("/add", (req, res) => {
       animalId = result.insertId
         // If there is nothing listed in both disposition2 and disposition3, only add the first disposition
         if (disposition2.length === 0 && disposition3.length == 0) {
-          addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition);
+          addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
         } else if (disposition2.length === 0) {
           addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
         } else if (disposition3.length == 0) {
