@@ -151,16 +151,16 @@ petsRouter.post("/add", (req, res) => {
       res.sendStatus(400);
     } else {
       animalId = result.insertId
-        // If there is nothing listed in both disposition2 and disposition3, only add the first disposition
-        if (disposition2.length === 0 && disposition3.length == 0) {
-          addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
-        } else if (disposition2.length === 0) {
-          addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
-        } else if (disposition3.length == 0) {
-          addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
-        } else {  // if all dispositions are selected
-          addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3)
-        }
+      // If there is nothing listed in both disposition2 and disposition3, only add the first disposition
+      if (disposition2.length === 0 && disposition3.length == 0) {
+        addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
+      } else if (disposition2.length === 0) {
+        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
+      } else if (disposition3.length == 0) {
+        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
+      } else {  // if all dispositions are selected
+        addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3)
+      }
 
       // Get animal dispositions and add it to Animal_Dispositions
       db.pool.query(addQuery2, function(error, result, fields) {
