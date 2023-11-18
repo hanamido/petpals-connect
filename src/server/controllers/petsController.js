@@ -19,6 +19,17 @@ function addAnimalDispositionQuery(animalId, dispositionName) {
     return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${dispositionName}'), ${animalId});`
 }
 
+function addTwoAnimalDispositionQuery(animalId, disposition1, disposition2) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId});
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});`;
+}
+
+function addThreeAnimalDispositionQuery(animalId, disposition1, disposition2, disposition3) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId}); 
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition3}'), ${animalId});`;
+}
+
 function checkIfBreedExists(breedName) {
     return `SELECT * FROM Breeds WHERE breed_name = '${breedName}'`;
 }
@@ -125,6 +136,8 @@ module.exports = {
     showOneAnimalQuery: showOneAnimalQuery,
     addAnimalQuery: addAnimalQuery,
     addAnimalDispositionQuery: addAnimalDispositionQuery,
+    addTwoAnimalDispositionQuery: addTwoAnimalDispositionQuery,
+    addThreeAnimalDispositionQuery: addThreeAnimalDispositionQuery,
     addAnimalBreedQuery: addAnimalBreedQuery,
     checkIfBreedExists: checkIfBreedExists,
     insertBreed: insertBreed,
