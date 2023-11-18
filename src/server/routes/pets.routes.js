@@ -3,7 +3,20 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const clientId = process.env.API_KEY;
 const clientSecret = process.env.API_SECRET;
-const { animalsQueries, showOneAnimalQuery, addAnimalQuery, addAnimalDispositionQuery, addAnimalBreedQuery, checkIfBreedExists, addOtherAnimalBreed, deleteAnimalQuery, checkType, editAnimalQuery, editAnimalBreed, editAnimalDisposition } = require('../controllers/petsController');
+const { 
+  animalsQueries, 
+  showOneAnimalQuery, 
+  addAnimalQuery, 
+  addAnimalDispositionQuery, 
+  addAnimalBreedQuery, 
+  checkIfBreedExists, 
+  addOtherAnimalBreed, 
+  deleteAnimalQuery, 
+  checkType, 
+  editAnimalQuery, 
+  editAnimalBreed, 
+  editAnimalDisposition, 
+  searchByType, searchByBreed, searchByDisposition  } = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -27,9 +40,76 @@ petsRouter.get("/", (req, res) => {
   })
 })
 
-petsRouter.get("/search/:query", (req, res) => {
-  // Display a pet based on the search parameter
+petsRouter.get("/search/type", (req, res) => {
+  // Display search results when user searched by type
+  // Users can search by type, breed, or disposition
+  const type = req.query;
+  let searchType;
+
+  // check if the type is 'Dog', 'Cat', or 'Other'
+  searchType = checkType(type) ? type : "Other";
+  let query1 = searchByType(searchType);
+
+  db.pool.query(query1, (error, result, fields) => {
+    if (error) {
+      console.log(error);
+      res.sendStatus(400);
+    }
+    res.send(result);
+  })
 }); 
+
+petsRouter.get("/search/breed", (req, res) => {
+  // Display search results when user searches by breed
+  const breed = req.query;
+  let searchBreed;
+
+  // check for the breed
+  let query1 = checkIfBreedExists(breed);
+  db.pool.query(query1, function(error, result, fields) {
+    if (error) {
+      console.log(error);
+    } else {
+      // if the breed doesn't exist, search by "Other"
+      if (result.length === 0) {
+        searchBreed = "Other";
+        let query2 = searchBreed(searchBreed);
+        db.pool.query(query2, function(error, result, fields) {
+          if (error) {
+            console.log(error);
+          } else {
+            res.send(result);
+          }
+        })
+      } else { // else the breed exists so just use the `breed` query parameters
+        searchBreed = breed;
+        let query2 = searchBreed(searchBreed); 
+        db.pool.query(query2, function(error, result, fields) {
+          if (error) {
+            console.log(error);
+          } else {
+            res.send(result);
+          }
+        })
+      }
+    }
+  })
+})
+
+petsRouter.get("/search/disposition", (req, res) => {
+  // Display search results when user searches by disposition
+  const disposition = req.query;
+
+  // Construct the query
+  let query1 = searchByDisposition(disposition);
+  db.pool.query(query1, function(error, result, fields) {
+    if (error) {
+      console.log(error);
+    } else {
+      res.send(result);
+    }
+  }) 
+})
 
 petsRouter.get("/:animal_id", (req, res) => {
   // perform SELECT based on animal_id
