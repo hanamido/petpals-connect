@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 export default function AnimalCard(props) {
   const navigate = useNavigate();
-    const {imgSrc, animalName, animalType, animalBreed, animalDisposition, animalAvailability} = props;
+    const {imgSrc, animalName, animalType, animalBreed, animalDisposition, animalAvailability, animalDescription} = props;
     const moreDetails = (animal) => {
       navigate('/moreDetails', {state:{animal:animal}});
   }
