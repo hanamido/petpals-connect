@@ -73,7 +73,7 @@ petsRouter.get("/search/breed", (req, res) => {
       // if the breed doesn't exist, search by "Other"
       if (result.length === 0) {
         searchBreed = "Other";
-        let query2 = searchBreed(searchBreed);
+        let query2 = searchByBreed(searchBreed);
         db.pool.query(query2, function(error, result, fields) {
           if (error) {
             console.log(error);
@@ -83,7 +83,7 @@ petsRouter.get("/search/breed", (req, res) => {
         })
       } else { // else the breed exists so just use the `breed` query parameters
         searchBreed = breed;
-        let query2 = searchBreed(searchBreed); 
+        let query2 = searchByBreed(searchBreed); 
         db.pool.query(query2, function(error, result, fields) {
           if (error) {
             console.log(error);
@@ -244,7 +244,7 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
       })
     }
   })
-  
+
   // TODO: check what format dispositions can be added as, perhaps disposition1, disposition2, disposition3? 
 
 })
