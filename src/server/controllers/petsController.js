@@ -19,6 +19,17 @@ function addAnimalDispositionQuery(animalId, dispositionName) {
     return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${dispositionName}'), ${animalId});`
 }
 
+function addTwoAnimalDispositionQuery(animalId, disposition1, disposition2) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId});
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});`;
+}
+
+function addThreeAnimalDispositionQuery(animalId, disposition1, disposition2, disposition3) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId}); 
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition3}'), ${animalId});`;
+}
+
 function checkIfBreedExists(breedName) {
     return `SELECT * FROM Breeds WHERE breed_name = '${breedName}'`;
 }
@@ -47,6 +58,67 @@ function deleteAnimalQuery(animalId) {
     return deletePetQuery;
 }
 
+function editAnimalQuery(animalId, animalName, animalType, animalPicture, animalAvailability, animalDescription) {
+    return `UPDATE Animals SET \
+	    name = "${animalName}", \
+        animal_type = (SELECT type_id FROM Types WHERE type_name = '${animalType}'), \
+        picture= "${animalPicture}", \
+        animal_availability=(SELECT availability_id FROM Availability_Options WHERE description = "${animalAvailability}"), \
+        description= "${animalDescription}" \
+    WHERE animal_id = ${animalId};`
+}
+
+function editAnimalDisposition(animalId, dispositionName) {
+    return `UPDATE Animal_Dispositions SET 
+        `
+}
+
+function editAnimalBreed(animalId, breedName) {
+    return `UPDATE Animal_Breeds SET
+    animal_id = ${animalId},
+    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = ${breedName});`;
+}
+
+function searchByType(typeName) {
+    return `SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition
+	FROM Animals
+	JOIN Types ON Animals.animal_type = Types.type_id
+	LEFT JOIN Animal_Breeds ON Animals.animal_id = Animal_Breeds.animal_id
+	LEFT JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
+	LEFT JOIN Animal_Dispositions ON Animals.animal_id = Animal_Dispositions.animal_id
+	LEFT JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
+	JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id
+	WHERE Types.type_name = '${typeName}'
+    GROUP BY animal_id;`;
+}
+
+function searchByBreed(breedName) {
+    return `SELECT \
+    Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
+        FROM Animals \
+        JOIN Animal_Breeds ON Animals.animal_id =  Animal_Breeds.animal_id \
+        JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id \
+        JOIN Types ON Animals.animal_type = Types.type_id \
+        JOIN Animal_Dispositions ON Animals.animal_id = Animal_Dispositions.animal_id \
+        JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id \
+        JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id \
+        WHERE Breeds.breed_name = '${breedName}'
+        GROUP BY animal_id;`;
+}
+
+function searchByDisposition(dispositionDesc) {
+    return `SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
+	FROM Animals \
+	JOIN Types ON Animals.animal_type = Types.type_id \
+	LEFT JOIN Animal_Breeds ON Animals.animal_id = Animal_Breeds.animal_id \
+	LEFT JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id \
+	LEFT JOIN Animal_Dispositions ON Animals.animal_id = Animal_Dispositions.animal_id \
+	LEFT JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id \
+	JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id \
+	WHERE Dispositions.description = '${dispositionDesc}' \
+    GROUP BY animal_id;`;
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -64,10 +136,18 @@ module.exports = {
     showOneAnimalQuery: showOneAnimalQuery,
     addAnimalQuery: addAnimalQuery,
     addAnimalDispositionQuery: addAnimalDispositionQuery,
+    addTwoAnimalDispositionQuery: addTwoAnimalDispositionQuery,
+    addThreeAnimalDispositionQuery: addThreeAnimalDispositionQuery,
     addAnimalBreedQuery: addAnimalBreedQuery,
     checkIfBreedExists: checkIfBreedExists,
     insertBreed: insertBreed,
     addOtherAnimalBreed: addOtherAnimalBreed,
     deleteAnimalQuery: deleteAnimalQuery,
     checkType: checkType,
+    editAnimalQuery: editAnimalQuery,
+    editAnimalBreed: editAnimalBreed,
+    editAnimalDisposition: editAnimalDisposition,
+    searchByType: searchByType,
+    searchByBreed: searchByBreed,
+    searchByDisposition: searchByDisposition
 }

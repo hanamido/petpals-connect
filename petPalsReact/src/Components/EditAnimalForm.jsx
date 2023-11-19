@@ -5,19 +5,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
+import { useNavigate } from "react-router-dom";
 
 function EditAnimalForm({ animal }) {
-  console.log(animal);
   const addSchema = yup.object().shape({
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
     animal_disposition: yup.string().required("Animal disposition is required"),
-    animal_desription: yup.string(),
+    animal_description: yup.string(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
   });
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -32,23 +34,24 @@ function EditAnimalForm({ animal }) {
   const onSubmit = async data => {
     console.log(data);
     try {
+      console.log(animal.animal_id);
         // change API endpoint as needed 
-        const response = await fetch('/add', {
+        const response = await fetch(`http://localhost:3000/pets/edit/${animal.animal_id}`, {
             mode: 'cors',
-            method: 'POST',
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-          });
+          })
     
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
+          } else {
+            alert("Pet has been edited!");
+            navigate("/delete");
           }
-    
-          const result = await response.json();
-          alert("Thanks for submitting a new pet!")
-          reset();
+
         } catch (error) {
             alert("Submission failed. Please try again.")
           console.error('Error with form submission', error);
@@ -74,7 +77,7 @@ function EditAnimalForm({ animal }) {
           <option value="">Select Animal Type</option>
           <option value="Dog">Dog</option>
           <option value="Cat">Cat</option>
-          <option value="Other"></option>
+          <option value="Other">Other</option>
         </select>
         <p>{errors.animal_type?.message}</p>
 {/* TODO: update foreign key */}
@@ -111,12 +114,12 @@ function EditAnimalForm({ animal }) {
           <option value="Adopted">Adopted</option>
         </select>
         <p>{errors.animal_availability?.message}</p>
-        <input
-          type="text"
+        <textarea
           placeholder="Animal Description..."
           {...register("animal_description")}
           className="input"
           defaultValue={animal.animalDescription}
+          rows={4} cols={50}
         />
         <div className="input">
           <label>Upload photo (optional): </label>

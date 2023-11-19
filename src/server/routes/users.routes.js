@@ -46,10 +46,10 @@ usersRouter.get("/:owner_id", (req, res) => {
     if (err) throw err;  // error handling
     // send results to frontend
     res.send(results);
-    // res.redirect(homeRouter);
   })
 })
 
+/* Stretch Features */
 usersRouter.put("/edit/:user_id", (req, res) => {
   // Edit a user given the user ID
   // Send the new user details to frontend

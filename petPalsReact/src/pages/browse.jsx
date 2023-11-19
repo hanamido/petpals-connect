@@ -100,6 +100,7 @@ const [animals, setAnimals] = useState([]);
           animalBreed,
           animalDisposition,
           animalAvailability,
+          animalDescription
         } = animal;
         return (
           <AnimalCard
@@ -109,6 +110,7 @@ const [animals, setAnimals] = useState([]);
             animalBreed={animalBreed}
             animalDisposition={animalDisposition}
             animalAvailability={animalAvailability}
+            animalDescription={animalDescription}
           />
         );
       })}
