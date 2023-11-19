@@ -22,9 +22,9 @@ function CreateAccountForm() {
     reset
   } = useForm({ resolver: yupResolver(addSchema) });
 
-  // THIS IS WHERE THE POST REQUEST WILL GO 
-  // Please feel free to ammend in any way that works for middleware integration
-  //
+  // THIS IS WHERE THE AUTH0 Changes will be made
+  // Please feel free to ammend in any way that works for Auth0 integration
+  // API endpoint and method can be changed
   const onSubmit = async data => {
     console.log(data);
     try {

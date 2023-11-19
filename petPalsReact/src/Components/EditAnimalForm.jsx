@@ -90,18 +90,6 @@ function EditAnimalForm({ animal }) {
         />
         <p>{errors.animal_breed?.message}</p>
 
-        <select
-          placeholder="Animal Disposition..."
-          {...register("animal_disposition")}
-          className="input"
-        >
-{/* TODO: Update dispositions as needed with pets.routes.js */}
-          <option value="">Select Disposition</option>
-          <option value="Animal must be leashed at all times">Animal must be leashed at all times</option>
-          <option value="Good with other animals">Good with other animals</option>
-          <option value="Good with children">Good with children</option>
-        </select>
-        <p>{errors.animal_disposition?.message}</p>
 {/* TODO: update foreign key */}
         <select
           placeholder="Animal Availability..."
@@ -121,6 +109,38 @@ function EditAnimalForm({ animal }) {
           defaultValue={animal.animalDescription}
           rows={4} cols={50}
         />
+
+{/*Animal Disposition - might need to change integration with register values due to checkbox formatting */}
+<div className="checkboxContainer">
+<label className="checkboxLabel">
+  <h3>Animal Disposition:</h3>
+        <input 
+            type="checkbox" 
+            value="Animal must be leashed at all times" 
+            {...register("animal_disposition")}
+        />
+        Animal must be leashed at all times
+    </label>
+    <label className="checkboxLabel">
+        <input 
+            type="checkbox" 
+            value="Good with other animals" 
+            {...register("animal_disposition2")}
+        />
+        Good with other animals
+    </label>
+    <label className="checkboxLabel">
+        <input 
+            type="checkbox" 
+            value="Good with children" 
+            {...register("animal_disposition3")}
+        />
+        Good with children
+    </label>
+    </div>
+        <p>{errors.animal_disposition?.message}</p>
+
+      
         <div className="input">
           <label>Upload photo (optional): </label>
           <input
