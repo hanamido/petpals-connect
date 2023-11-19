@@ -2,6 +2,7 @@ import React from "react";
 import "../App.css";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
+import SearchBar from "../Components/SearchBar";
 
 function Navbar() {
   //TODO: add account logic to see if user is account admin
@@ -19,10 +20,7 @@ function Navbar() {
           {isAccountAdmin ? <a href="/delete">Edit or Delete Pet</a> : null}
         </div>
       </div>
-      <div className="Search">
-        <input type="text" placeholder="Search" />
-        <button>Go!</button>
-      </div>
+<SearchBar/>
       <div className="account">
         <a href="/account">
           <img className="iconLarge" src={user}></img>

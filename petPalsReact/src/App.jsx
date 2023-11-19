@@ -11,12 +11,14 @@ import EditPet from "./pages/edit";
 import Home from "./pages/home";
 import EditForm from "./pages/editForm";
 import MoreDetails from "./pages/moreDetails";
+import SearchResults from "./pages/searchResults";
 
 function App() {
   return (
     <>
-      <Navbar />
+
         <BrowserRouter>
+        <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/account" element={<Account />} />
@@ -27,6 +29,7 @@ function App() {
             <Route path="/edit" element={<EditPet />} />
             <Route path="/editForm" element={<EditForm/>}/>
             <Route path="/moreDetails" element={<MoreDetails/>}/>
+            <Route path="/searchResults" element={<SearchResults/>}/>
           </Routes>
         </BrowserRouter>
     </>
