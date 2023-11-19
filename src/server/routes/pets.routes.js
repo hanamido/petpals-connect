@@ -133,10 +133,11 @@ petsRouter.post("/add", (req, res) => {
   let picture = data['picture'];
   let animal_availability = data['animal_availability'];
   let animal_description = data['animal_description'];
+  
   // TODO: See what format dispositions will be sent as, maybe as disposition1, disposition2, disposition3
   let animal_disposition = data['animal_disposition'];
-  let disposition2 = data['animal_disposition2'];
-  let disposition3 = data['animal_disposition3'];
+  // let disposition2 = data['animal_disposition2'];
+  // let disposition3 = data['animal_disposition3'];
   let animal_breed = data['animal_breed'];
 
   let addQuery2;
@@ -151,16 +152,18 @@ petsRouter.post("/add", (req, res) => {
       res.sendStatus(400);
     } else {
       animalId = result.insertId
+      // TODO: Integrate adding multiple dispositions
       // If there is nothing listed in both disposition2 and disposition3, only add the first disposition
-      if (disposition2.length === 0 && disposition3.length == 0) {
-        addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
-      } else if (disposition2.length === 0) {
-        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
-      } else if (disposition3.length == 0) {
-        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
-      } else {  // if all dispositions are selected
-        addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3);
-      }
+      // if (disposition2.length === 0 && disposition3.length == 0) {
+      //   addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
+      // } else if (disposition2.length === 0) {
+      //   addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
+      // } else if (disposition3.length == 0) {
+      //   addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
+      // } else {  // if all dispositions are selected
+      //   addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3);
+      // }
+      addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
 
       // Get animal dispositions and add it to Animal_Dispositions
       db.pool.query(addQuery2, function(error, result, fields) {
