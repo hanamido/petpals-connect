@@ -17,7 +17,7 @@ function AddPet() {
   };
 
   return (
-    <div>
+    <div className="loginContainer">
       <button className="submitButton" onClick={() => setShowAnimalForm(!showAnimalForm) }>Add Animal Form</button>
       <button className="submitButton" onClick={() => setShowAdminForm(!showAdminForm)}>Add Admin Form</button>
       <button className="submitButton" onClick={() => setShowClientForm(!showClientForm)}>Add Prospective Owner Form</button>

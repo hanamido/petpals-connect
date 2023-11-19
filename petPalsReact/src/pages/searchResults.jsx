@@ -2,34 +2,51 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "../App.css";
 import AnimalCard from "../Components/AnimalCard";
+import { useLocation } from 'react-router-dom';
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
-function Browse() {
+function SearchResults() {
 
-// ATTN: Middleware integration
+// Receiving search cateogory and search value from search bar function
+const location = useLocation();
+const{searchValue} = location.state || {};
+const{searchCategory} = location.state || {};
+
 const [animals, setAnimals] = useState([]);
+const baseUrl = "http://localhost:3000/pets/search";
+let url;
+// Setting up API endpoint with variables
+switch (searchCategory){
+    case 'type':
+        url=`${baseUrl}/type?type=${encodeURIComponent(searchValue)}`;
+        break;
+    case 'breed':
+        url=`${baseUrl}/breed?breed=${encodeURIComponent(searchValue)}`;
+        break;
+    case disposition:
+        url=`${baseUrl}/disposition?disposition=${encodeURIComponent(searchValue)}`;
+        break;
+}
 
  useEffect(() => {
   let headers = new Headers();
 
   headers.append('Content-Type', 'application/json');
   headers.append('Accept', 'application/json');
-  headers.append('Origin','http://localhost:3000');
 
-  // Fetch animal data from server's API here
-  fetch("http://localhost:3000/pets", {
+  fetch(url, {
     mode: 'cors',
     method: 'GET',
     headers: headers
-  })
+  }) 
      .then((response) => response.json())
      .then((data) => setAnimals(data))
      .catch((error) => console.error("Error fetching animal data:", error));
  }, []);
 
-// END PLACEHOLDER
   return (
+      <div><h1>Results for {searchCategory} as {searchValue}</h1>
     <div className="cardList">
       {animals.map((animal) => {
         const {
@@ -54,7 +71,8 @@ const [animals, setAnimals] = useState([]);
         );
       })}
     </div>
+    </div>
   );
 }
 
-export default Browse;
+export default SearchResults;

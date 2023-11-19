@@ -166,6 +166,44 @@ border: 1px solid;
 padding: 8px;
 }
 
+.checkboxContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid transparent;
+  padding: 0.6em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  border-color: #e7d5ef;
+  border-width: 3px;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  background-color: white;
+  border-style: solid;
+  align-items: center;
+  font-family: "Roboto";
+  border-radius: 10px;
+
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px; 
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 5px; 
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+}
+
 a {
   display: inline-block;
 }
