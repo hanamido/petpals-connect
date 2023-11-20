@@ -5,13 +5,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
+import { useRef } from "react";
 
 function AddAnimalForm() {
   const addSchema = yup.object().shape({
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
-    animal_disposition: yup.string().required("Animal disposition is required"),
+    animal_disposition1: yup.string().required("Animal disposition is required"),
+    animal_disposition2: yup.string(),
+    animal_disposition3: yup.string(),
     animal_description: yup.string(),
     animal_availability: yup
       .string()
@@ -22,13 +25,16 @@ function AddAnimalForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm({ resolver: yupResolver(addSchema) });
 
   // THIS IS WHERE THE POST REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
+    console.log(data);
+
+    console.log(data.animal_disposition1, data.animal_disposition2, data.animal_disposition3);
 
     try {
       let headers = new Headers();
@@ -109,7 +115,7 @@ function AddAnimalForm() {
         <input 
             type="checkbox" 
             value="Animal must be leashed at all times" 
-            {...register("animal_disposition")}
+            {...register("animal_disposition1")}
         />
         Animal must be leashed at all times
     </label>
@@ -130,7 +136,7 @@ function AddAnimalForm() {
         Good with children
     </label>
     </div>
-        <p>{errors.animal_disposition?.message}</p>
+        <p>{errors.animal_disposition1?.message}</p>
 
 
 {/*Animal Description */}
