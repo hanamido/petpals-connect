@@ -44,19 +44,21 @@ petsRouter.get("/", (req, res) => {
 petsRouter.get("/search/type", (req, res) => {
   // Display search results when user searched by type
   // Users can search by type, breed, or disposition
-  const type = req.query;
+  const typeValue = req.query.type;
   let searchType;
 
   // check if the type is 'Dog', 'Cat', or 'Other'
-  searchType = checkType(type) ? type : "Other";
+  searchType = checkType(typeValue);
+  console.log(searchType);
   let query1 = searchByType(searchType);
 
   db.pool.query(query1, (error, result, fields) => {
     if (error) {
       console.log(error);
       res.sendStatus(400);
+    } else {
+      res.send(result);
     }
-    res.send(result);
   })
 }); 
 
@@ -206,13 +208,10 @@ petsRouter.post("/add", (req, res) => {
               console.log(result);
               // if the breed (dog or cat) is not in the db, add it as "Other"
               const isEmptySet = result.length === 0;
-              // if it is not a dog or cat, add it as "Other" for type and breed
-              if (!checkType(animal_type)) {
-                animal_breed = "Other"
-                animal_type = "Other"
-              }
+              // if the type is not a 'Dog' or 'Cat', add animalBreed and animalType as "Other"
+              const animalType = checkType(animal_type);
               if (isEmptySet) {
-                addQuery4 = addOtherAnimalBreed(animalId, animal_breed, animal_type)
+                addQuery4 = addOtherAnimalBreed(animalId, animalType);
                 // then add to Animal_Breeds
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
@@ -223,7 +222,7 @@ petsRouter.post("/add", (req, res) => {
                 })
               } else {
                 // otherwise go straight into adding to Animal_Breeds
-                addQuery4 = addAnimalBreedQuery(animalId, animal_breed, animal_type);
+                addQuery4 = addAnimalBreedQuery(animalId, animal_breed, animalType);
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
                     console.log(error);
@@ -272,7 +271,12 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
   })
 
   // TODO: check what format dispositions can be added as, perhaps disposition1, disposition2, disposition3? 
+
+  // TODO: Check if the disposition is already associated with the animal_id
+
+  // TODO: If that disposition is checked, remove it
   
+  // TODO: Otherwise, add it to the animal_id
 
 })
 

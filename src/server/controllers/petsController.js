@@ -36,11 +36,11 @@ function checkIfBreedExists(breedName) {
 }
 
 function checkType(typeName) {
-    if (typeName !== "Dog" || typeName !== "Cat") {
+    console.log(typeName);
+    if (typeName !== "Dog" && typeName !== "Cat") {
         return "Other";
-    } else {
-        return typeName;
-    }
+    } 
+    return typeName;
 }
 
 function insertBreed(breedName, animalType) {
