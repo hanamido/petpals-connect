@@ -272,6 +272,7 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
   })
 
   // TODO: check what format dispositions can be added as, perhaps disposition1, disposition2, disposition3? 
+  
 
 })
 

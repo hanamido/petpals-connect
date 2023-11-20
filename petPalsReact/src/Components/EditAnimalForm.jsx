@@ -13,6 +13,8 @@ function EditAnimalForm({ animal }) {
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
     animal_disposition: yup.string().required("Animal disposition is required"),
+    animal_disposition2: yup.string(),
+    animal_disposition3: yup.string(),
     animal_description: yup.string(),
     animal_availability: yup
       .string()
