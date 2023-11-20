@@ -16,8 +16,8 @@ const {
   editAnimalQuery, 
   editAnimalBreed, 
   editAnimalDisposition, 
-  searchByType, searchByBreed, searchByDisposition,
-  executeTwoDispositionsQuery  } = require('../controllers/petsController');
+  searchByType, searchByBreed, searchByDisposition 
+} = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -124,7 +124,7 @@ petsRouter.get("/:animal_id", (req, res) => {
     res.send(results);
   })
 })
-  
+
 petsRouter.post("/add", (req, res) => {
   // Add a new pet to the app
   // Gets new pet info from frontend form and adds it to database
@@ -142,7 +142,7 @@ petsRouter.post("/add", (req, res) => {
 
   let addQuery2;
   let animalId;
-  let values;
+  let values = [];
 
   // Create the general add query and run it on the db
   let addQuery = addAnimalQuery(name, animal_type, picture, animal_availability, animal_description);
@@ -155,35 +155,41 @@ petsRouter.post("/add", (req, res) => {
       animalId = result.insertId
       // If only disposition1 is checked, only add that one
       if (disposition1 !== "false" && disposition2 === "false" && disposition3 === "false") {
-        addQuery2 = addAnimalDispositionQuery(animalId, disposition1);
-      } else if (disposition2 !== "false" && disposition1 === "false" && disposition3 === "false") {
-        // if only disposition 2 is checked, only add that one
-        addQuery2 = addAnimalDispositionQuery(animalId, disposition2);
-      } else if (disposition3 !== "false" && disposition1 === "false" && disposition2 === "false") {
-        // If only disposition3 is checked, only add it
-        addQuery2 = addAnimalDispositionQuery(animalId, disposition3);
-      } else if (disposition1 !== "false" && disposition2 !== "false" && disposition3 === "false") {
-        // If only disposition1 and disposition2 are checked, only add disposition1 and disposition2
-        executeTwoDispositionsQuery(animalId, disposition1, disposition2, animal_breed, animal_type, res).then(response => {
-          res.send(response);
-        })
-      } else if (disposition1 !== "true" && disposition2 === "false" && disposition3 !== "false") {
-        // If only disposition1 and disposition3 are checked, only add those two
-        executeTwoDispositionsQuery(animalId, disposition1, disposition3, animal_breed, animal_type, res);
-      } else if (disposition1 === "false" && disposition2 !== "false" && disposition3 !== "false") {
-        // If only disposition2 and disposition3 are checked, only add those two
-        // executeTwoDispositionsQuery(animalId, disposition2, disposition3, animal_breed, animal_type).then(response => {
-        //   res.json(response);
-        // });
-        addQuery2 = addTwoAnimalDispositionQuery(animalId);
-        let values = [disposition2, disposition3]
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition1];
       } 
-      // else {  // if all dispositions are selected
-      //   addQuery2 = addThreeAnimalDispositionQuery(animalId, disposition1, disposition2, disposition3);
-      // }
+      else if (disposition2 !== "false" && disposition1 === "false" && disposition3 === "false") {
+        // if only disposition 2 is checked, only add that one
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition2];
+      } 
+      else if (disposition3 !== "false" && disposition1 === "false" && disposition2 === "false") {
+        // If only disposition3 is checked, only add it
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition3];
+      } 
+      else if (disposition1 !== "false" && disposition2 !== "false" && disposition3 === "false") {
+        // If only disposition1 and disposition2 are checked, only add disposition1 and disposition2
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition2];
+      } 
+      else if (disposition1 !== "true" && disposition2 === "false" && disposition3 !== "false") {
+        // If only disposition1 and disposition3 are checked, only add those two
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition3];
+      } 
+      else if (disposition1 === "false" && disposition2 !== "false" && disposition3 !== "false") {
+        // If only disposition2 and disposition3 are checked, only add those two
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition2, disposition3];
+      } 
+      else {  // if all dispositions are selected
+        addQuery2 = addThreeAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition2, disposition3];
+      }
 
       // Get animal dispositions and add it to Animal_Dispositions
-        db.pool.query(addQuery2, [disposition2, disposition3], function(error, result, fields) {
+        db.pool.query(addQuery2, values, function(error, result, fields) {
         if (error) {
           console.log(error);
           res.sendStatus(400);
