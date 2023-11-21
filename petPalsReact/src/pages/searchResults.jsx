@@ -8,28 +8,28 @@ import user from "../images/user-regular.svg";
 
 function SearchResults() {
 
-// Receiving search cateogory and search value from search bar function
-const location = useLocation();
-const{searchValue} = location.state || {};
-const{searchCategory} = location.state || {};
-
-const [animals, setAnimals] = useState([]);
-const baseUrl = "http://localhost:3000/pets/search";
-let url;
-// Setting up API endpoint with variables
-switch (searchCategory){
+  // Receiving search cateogory and search value from search bar function
+  const location = useLocation();
+  const{searchValue} = location.state || {};
+  const{searchCategory} = location.state || {};
+  
+  const [animals, setAnimals] = useState([]);
+  const baseUrl = "http://localhost:3000/pets/search";
+  let url;
+  // Setting up API endpoint with variables
+  switch (searchCategory){
     case 'type':
         url=`${baseUrl}/type?type=${encodeURIComponent(searchValue)}`;
         break;
     case 'breed':
         url=`${baseUrl}/breed?breed=${encodeURIComponent(searchValue)}`;
         break;
-    case disposition:
+    case 'disposition':
         url=`${baseUrl}/disposition?disposition=${encodeURIComponent(searchValue)}`;
         break;
-}
+  }
 
- useEffect(() => {
+  useEffect(() => {
   let headers = new Headers();
 
   headers.append('Content-Type', 'application/json');
@@ -40,10 +40,10 @@ switch (searchCategory){
     method: 'GET',
     headers: headers
   }) 
-     .then((response) => response.json())
-     .then((data) => setAnimals(data))
-     .catch((error) => console.error("Error fetching animal data:", error));
- }, []);
+    .then((response) => response.json())
+    .then((data) => setAnimals(data))
+    .catch((error) => console.error("Error fetching animal data:", error));
+  }, []);
 
   return (
       <div><h1>Results for {searchCategory} as {searchValue}</h1>

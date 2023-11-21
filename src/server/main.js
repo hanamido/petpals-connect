@@ -4,6 +4,9 @@ const axios = require('axios');
 // const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require(
+  'path'
+);
 
 const corsOptions = {
   origin: '*', 
@@ -13,7 +16,9 @@ const corsOptions = {
 
 const app = express();
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+
+// app.use('/uploads', express.static(path.join(__dirname, 'animal-uploads')));
 
 const { petsRouter } = require('./routes/pets.routes.js');
 const { usersRouter } = require('./routes/users.routes.js');

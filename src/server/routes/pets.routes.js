@@ -1,8 +1,8 @@
 const express = require('express');
+const multer = require('multer');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-const clientId = process.env.API_KEY;
-const clientSecret = process.env.API_SECRET;
+const path = require('path');
 const { 
   animalsQueries, 
   showOneAnimalQuery, 
@@ -16,12 +16,33 @@ const {
   editAnimalQuery, 
   editAnimalBreed, 
   editAnimalDisposition, 
-  searchByType, searchByBreed, searchByDisposition  } = require('../controllers/petsController');
+  searchByType, searchByBreed, searchByDisposition,
+  checkIfDispositionWithAnimal,
+  editOtherAnimalBreed
+} = require('../controllers/petsController');
 
 // Database stuff
 const db = require('../database/db-connector');
 
 const petsRouter = express.Router();
+
+// Serve uploaded files statically
+petsRouter.use('/uploads', express.static(path.join(__dirname, '../../../animal-uploads')));
+
+// Set up multer for file uploads
+// const storage = multer.memoryStorage();
+
+const storage = multer.diskStorage({
+  destination: 'animal-uploads', 
+  // destination: (req, file, cb) => {
+  //   cb(null, './animalPicsUploads/'); // specify the upload directory
+  // },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); // generate a unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
 
 /* PETS ROUTES */
 petsRouter.get("/", (req, res) => {
@@ -36,6 +57,7 @@ petsRouter.get("/", (req, res) => {
   db.pool.query(showAllQuery, function (err, results, fields) {
     // get all the pets in the database to pass to frontend
     if (err) throw err; 
+    console.log(results.length);
     res.send(results);
   })
 })
@@ -43,25 +65,27 @@ petsRouter.get("/", (req, res) => {
 petsRouter.get("/search/type", (req, res) => {
   // Display search results when user searched by type
   // Users can search by type, breed, or disposition
-  const type = req.query;
+  const typeValue = req.query.type;
   let searchType;
 
   // check if the type is 'Dog', 'Cat', or 'Other'
-  searchType = checkType(type) ? type : "Other";
+  searchType = checkType(typeValue);
+  console.log(searchType);
   let query1 = searchByType(searchType);
 
   db.pool.query(query1, (error, result, fields) => {
     if (error) {
       console.log(error);
       res.sendStatus(400);
+    } else {
+      res.send(result);
     }
-    res.send(result);
   })
 }); 
 
 petsRouter.get("/search/breed", (req, res) => {
   // Display search results when user searches by breed
-  const breed = req.query;
+  const breed = req.query.breed;
   let searchBreed;
 
   // check for the breed
@@ -98,7 +122,7 @@ petsRouter.get("/search/breed", (req, res) => {
 
 petsRouter.get("/search/disposition", (req, res) => {
   // Display search results when user searches by disposition
-  const disposition = req.query;
+  const disposition = req.query.disposition;
 
   // Construct the query
   let query1 = searchByDisposition(disposition);
@@ -123,24 +147,29 @@ petsRouter.get("/:animal_id", (req, res) => {
     res.send(results);
   })
 })
-  
-petsRouter.post("/add", (req, res) => {
+
+petsRouter.post("/add", upload.single('picture'), (req, res) => {
   // Add a new pet to the app
   // Gets new pet info from frontend form and adds it to database
   let data = req.body;
   let name = data['name'];
   let animal_type = data['animal_type'];
-  let picture = data['picture'];
+  let picture = req.file.path;
   let animal_availability = data['animal_availability'];
   let animal_description = data['animal_description'];
-  // TODO: See what format dispositions will be sent as, maybe as disposition1, disposition2, disposition3
-  let animal_disposition = data['animal_disposition'];
+  //  are sent as a boolean string ("true"/"false") due to the checkbox format
+  let disposition1 = data['animal_disposition1'];
   let disposition2 = data['animal_disposition2'];
   let disposition3 = data['animal_disposition3'];
   let animal_breed = data['animal_breed'];
 
   let addQuery2;
   let animalId;
+  let values = [];
+
+  // Update the image with its URL so it can be displayed
+  const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
+  picture = imageUrl;
 
   // Create the general add query and run it on the db
   let addQuery = addAnimalQuery(name, animal_type, picture, animal_availability, animal_description);
@@ -151,19 +180,43 @@ petsRouter.post("/add", (req, res) => {
       res.sendStatus(400);
     } else {
       animalId = result.insertId
-      // If there is nothing listed in both disposition2 and disposition3, only add the first disposition
-      if (disposition2.length === 0 && disposition3.length == 0) {
-        addQuery2 = addAnimalDispositionQuery(animalId, animal_disposition);
-      } else if (disposition2.length === 0) {
-        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition3);
-      } else if (disposition3.length == 0) {
-        addQuery2 = addTwoAnimalDispositionQuery(animalId, animal_disposition, disposition2);
-      } else {  // if all dispositions are selected
-        addQuery2 = addThreeAnimalDispositionQuery(animalId, animal_disposition, disposition2, disposition3);
+      // If only disposition1 is checked, only add that one
+      if (disposition1 !== "false" && disposition2 === "false" && disposition3 === "false") {
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition1];
+      } 
+      else if (disposition2 !== "false" && disposition1 === "false" && disposition3 === "false") {
+        // if only disposition 2 is checked, only add that one
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition2];
+      } 
+      else if (disposition3 !== "false" && disposition1 === "false" && disposition2 === "false") {
+        // If only disposition3 is checked, only add it
+        addQuery2 = addAnimalDispositionQuery(animalId);
+        values = [disposition3];
+      } 
+      else if (disposition1 !== "false" && disposition2 !== "false" && disposition3 === "false") {
+        // If only disposition1 and disposition2 are checked, only add disposition1 and disposition2
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition2];
+      } 
+      else if (disposition1 !== "true" && disposition2 === "false" && disposition3 !== "false") {
+        // If only disposition1 and disposition3 are checked, only add those two
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition3];
+      } 
+      else if (disposition1 === "false" && disposition2 !== "false" && disposition3 !== "false") {
+        // If only disposition2 and disposition3 are checked, only add those two
+        addQuery2 = addTwoAnimalDispositionQuery(animalId);
+        values = [disposition2, disposition3];
+      } 
+      else {  // if all dispositions are selected
+        addQuery2 = addThreeAnimalDispositionQuery(animalId);
+        values = [disposition1, disposition2, disposition3];
       }
 
       // Get animal dispositions and add it to Animal_Dispositions
-      db.pool.query(addQuery2, function(error, result, fields) {
+        db.pool.query(addQuery2, values, function(error, result, fields) {
         if (error) {
           console.log(error);
           res.sendStatus(400);
@@ -180,13 +233,10 @@ petsRouter.post("/add", (req, res) => {
               console.log(result);
               // if the breed (dog or cat) is not in the db, add it as "Other"
               const isEmptySet = result.length === 0;
-              // if it is not a dog or cat, add it as "Other" for type and breed
-              if (!checkType(animal_type)) {
-                animal_breed = "Other"
-                animal_type = "Other"
-              }
+              // if the type is not a 'Dog' or 'Cat', add animalBreed and animalType as "Other"
+              const animalType = checkType(animal_type);
               if (isEmptySet) {
-                addQuery4 = addOtherAnimalBreed(animalId, animal_breed, animal_type)
+                addQuery4 = addOtherAnimalBreed(animalId, animalType);
                 // then add to Animal_Breeds
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
@@ -197,7 +247,7 @@ petsRouter.post("/add", (req, res) => {
                 })
               } else {
                 // otherwise go straight into adding to Animal_Breeds
-                addQuery4 = addAnimalBreedQuery(animalId, animal_breed, animal_type);
+                addQuery4 = addAnimalBreedQuery(animalId, animal_breed, animalType);
                 db.pool.query(addQuery4, function(error, result, fields) {
                   if (error) {
                     console.log(error);
@@ -214,20 +264,49 @@ petsRouter.post("/add", (req, res) => {
   })
 })
 
-petsRouter.put("/edit/:animal_id", (req, res) => {
+petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
   // Edit a pet given the pet ID
   // Send the new pet data to frontend
   let data = req.body;
+  let id = req.params.animal_id;
   let name = data['name'];
   let animal_type = data['animal_type'];
-  let picture = data['picture'];
+  let picture = req.file.path;
   let animal_availability = data['animal_availability'];
   let animal_description = data['animal_description'];
-  let animal_disposition = data['animal_disposition'];
+  let disposition1 = data['animal_disposition'];
+  let disposition2 = data['animal_disposition2'];
+  let disposition3 = data['animal_disposition3'];
   let animal_breed = data['animal_breed'];
+  let dispositionsToAdd = [];
+  let dispositionsToDelete = [];
+  let values;
+
+  // Update the image with its URL so it can be displayed
+  const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
+  picture = imageUrl;
+
+  values = [disposition1, id];
+  let firstCheckQuery = checkIfDispositionWithAnimal();
+  db.pool.query(firstCheckQuery, values, function(error, result, fields) {
+    if (error) { console.log(error); }
+    else {
+      //if the disposition is not yet associated with the animal yet and it is checked
+      if (result.length === 0 && disposition1 !== "false") {
+        dispositionsToAdd.push(disposition1);
+      }
+      // if the disposition is associated with the animal but it is unchecked
+      else if (result.length > 0 && disposition1 === "false") {
+        dispositionsToDelete.push(disposition1);
+      }
+    }
+  })
+
+  console.log("To add: ", dispositionsToAdd);
+  console.log("To delete: ", dispositionsToDelete);
 
   // Declare general edit query
-  let query1 = editAnimalQuery(req.params.animal_id, name, animal_type, picture, animal_availability, animal_description)
+  let query1 = editAnimalQuery(id, name, animal_type, picture, animal_availability, animal_description);
 
   // First send the query to update the animal
   db.pool.query(query1, function(error, result, fields) {
@@ -236,17 +315,35 @@ petsRouter.put("/edit/:animal_id", (req, res) => {
       res.sendStatus(400);
     }
     else {
-      const query2 = editAnimalBreed(req.params.animal_id, animal_breed);
-      // Then update breeds through Animal_Breeds table
+      const query2 = checkIfBreedExists(animal_breed);
       db.pool.query(query2, function(error, result, fields) {
-        console.log(result);
-        res.sendStatus(200);
+        if (error) { console.log(error); res.sendStatus(400); }
+        else {
+          // if that breed doesn't exist, insert it as "Other"
+          if (result.length === 0) {
+            animal_breed = "Other";
+            let query3 = editOtherAnimalBreed(id, animal_breed, animal_type);
+            db.pool.query(query3, function(error, result, fields) {
+              if (error) { console.log(error); }
+              else {
+                res.sendStatus(200);
+              }
+            })
+          } else {
+            let query3 = editAnimalBreed(req.params.animal_id, animal_breed);
+            // Then update breeds through Animal_Breeds table
+            db.pool.query(query3, function(error, result, fields) {
+              if (error) { console.log(error); res.sendStatus(400); }
+              else {
+                console.log(result);
+                res.sendStatus(200);
+              }
+            })
+          }
+        }
       })
     }
   })
-
-  // TODO: check what format dispositions can be added as, perhaps disposition1, disposition2, disposition3? 
-
 })
 
 petsRouter.delete("/delete/:animal_id", (req, res) => {

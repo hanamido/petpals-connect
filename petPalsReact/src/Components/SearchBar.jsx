@@ -10,10 +10,13 @@ import { useNavigate } from "react-router-dom";
 function SearchBar() {
     const [searchValue, setSearchValue]=useState('');
     const [searchCategory, setSearchCategory] = useState('type');
+    const [searchResults, setSearchResults] = useState([]);
+    const [didPressReset, setDidPressReset] = useState(false);
+
     const navigate = useNavigate();
     const submitSearch = () => {
-        console.log("search", searchValue)
-        navigate('/searchResults', {state:{searchValue, searchCategory}})
+        console.log("search", searchValue);
+        navigate('/searchResults', {state:{ searchValue, searchCategory }});
     }
 
       return (

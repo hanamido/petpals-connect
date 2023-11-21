@@ -15,19 +15,20 @@ function addAnimalQuery(name, animal_type, picture, animal_availability, descrip
     VALUES ("${name}", (SELECT type_id FROM Types WHERE type_name = "${animal_type}"), "${picture}", (SELECT availability_id FROM Availability_Options WHERE description = "${animal_availability}"), "${description}");`
 }
 
-function addAnimalDispositionQuery(animalId, dispositionName) {
-    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${dispositionName}'), ${animalId});`
+function addAnimalDispositionQuery(animalId) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId});`
 }
 
-function addTwoAnimalDispositionQuery(animalId, disposition1, disposition2) {
-    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId});
-    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});`;
+function addTwoAnimalDispositionQuery(animalId) {
+    let query = `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId}); \
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId});`
+    return query;
 }
 
-function addThreeAnimalDispositionQuery(animalId, disposition1, disposition2, disposition3) {
-    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition1}'), ${animalId}); 
-    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition2}'), ${animalId});
-    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = '${disposition3}'), ${animalId});`;
+function addThreeAnimalDispositionQuery(animalId) {
+    return `INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId}); 
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId});
+    INSERT INTO Animal_Dispositions (disposition_id, animal_id) VALUES ((SELECT disposition_id FROM Dispositions WHERE description = ?), ${animalId});`;
 }
 
 function checkIfBreedExists(breedName) {
@@ -35,10 +36,11 @@ function checkIfBreedExists(breedName) {
 }
 
 function checkType(typeName) {
-    if (typeName !== "Dog" || typeName !== "Cat") {
-        return false;
-    }
-    return true;
+    console.log(typeName);
+    if (typeName !== "Dog" && typeName !== "Cat") {
+        return "Other";
+    } 
+    return typeName;
 }
 
 function insertBreed(breedName, animalType) {
@@ -74,9 +76,16 @@ function editAnimalDisposition(animalId, dispositionName) {
 }
 
 function editAnimalBreed(animalId, breedName) {
-    return `UPDATE Animal_Breeds SET
-    animal_id = ${animalId},
-    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = ${breedName});`;
+    return `UPDATE Animal_Breeds SET \
+    breed_id = (SELECT breed_id FROM Breeds WHERE \ breed_name = "${breedName}") \
+    WHERE animal_id = ${animalId};`;
+}
+
+function editOtherAnimalBreed(animalId, breedName, typeName) {
+    return `UPDATE Animal_Breeds SET \
+    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = "${breedName}" AND type_id = (SELECT\
+        type_id FROM Types WHERE type_name = "${typeName}")) \
+        WHERE animal_id = ${animalId}`;
 }
 
 function searchByType(typeName) {
@@ -119,6 +128,10 @@ function searchByDisposition(dispositionDesc) {
     GROUP BY animal_id;`;
 }
 
+function checkIfDispositionWithAnimal() {
+    return `SELECT * FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ?;`;
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -149,5 +162,7 @@ module.exports = {
     editAnimalDisposition: editAnimalDisposition,
     searchByType: searchByType,
     searchByBreed: searchByBreed,
-    searchByDisposition: searchByDisposition
+    searchByDisposition: searchByDisposition,
+    checkIfDispositionWithAnimal: checkIfDispositionWithAnimal,
+    editOtherAnimalBreed: editOtherAnimalBreed,
 }

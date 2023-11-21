@@ -12,8 +12,11 @@ function EditAnimalForm({ animal }) {
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
-    animal_disposition: yup.string().required("Animal disposition is required"),
+    animal_disposition1: yup.string().required("Animal disposition is required"),
+    animal_disposition2: yup.string(),
+    animal_disposition3: yup.string(),
     animal_description: yup.string(),
+    picture: yup.mixed(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -28,11 +31,33 @@ function EditAnimalForm({ animal }) {
     reset
   } = useForm({ resolver: yupResolver(addSchema) });
 
+  // Check whether the animal disposition is checked or not
+  const checkAnimalDisposition = (dispositionDesc) => {
+    // split the animal dispositions
+    const animalDispositions = animal.animalDisposition.split(",");
+    // if the disposition is currently in the array, then return true
+    if (animalDispositions.includes(dispositionDesc)) {
+      return true;
+    } 
+    return false;
+  }
+
   // THIS IS WHERE THE PUT REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
-    console.log(data);
+
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("animal_type", data.animal_type);
+    formData.append("animal_breed", data.animal_breed);
+    formData.append("animal_disposition1", data.animal_disposition1);
+    formData.append("animal_disposition2", data.animal_disposition2);
+    formData.append("animal_disposition3", data.animal_disposition3);
+    formData.append("animal_description", data.animal_description);
+    formData.append("animal_availability", data.animal_availability);
+    formData.append("picture", data.picture[0]);
+
     try {
       console.log(animal.animal_id);
         // change API endpoint as needed 
@@ -40,9 +65,9 @@ function EditAnimalForm({ animal }) {
             mode: 'cors',
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json',
+              'Accept': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: formData,
           })
     
           if (!response.ok) {
@@ -117,7 +142,8 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Animal must be leashed at all times" 
-            {...register("animal_disposition")}
+            defaultChecked={checkAnimalDisposition("Animal must be leashed at all times")}
+            {...register("animal_disposition1")}
         />
         Animal must be leashed at all times
     </label>
@@ -125,6 +151,7 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Good with other animals" 
+            defaultChecked={checkAnimalDisposition("Good with other animals")}
             {...register("animal_disposition2")}
         />
         Good with other animals
@@ -133,6 +160,7 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Good with children" 
+            defaultChecked={checkAnimalDisposition("Good with children")}
             {...register("animal_disposition3")}
         />
         Good with children
