@@ -60,7 +60,6 @@ function ViewAnimalData() {
               navigate("/");
 
             } catch (error) {
-                alert("Submission failed. Please try again.")
               console.error('Error with form submission', error);
             }
         }

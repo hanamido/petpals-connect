@@ -12,7 +12,7 @@ function EditAnimalForm({ animal }) {
     name: yup.string().required("Animal name is required"),
     animal_type: yup.string().required("Animal type is required"),
     animal_breed: yup.string().required("Animal breed is required"),
-    animal_disposition: yup.string().required("Animal disposition is required"),
+    animal_disposition1: yup.string().required("Animal disposition is required"),
     animal_disposition2: yup.string(),
     animal_disposition3: yup.string(),
     animal_description: yup.string(),
@@ -30,10 +30,27 @@ function EditAnimalForm({ animal }) {
     reset
   } = useForm({ resolver: yupResolver(addSchema) });
 
+  // Check whether the animal disposition is checked or not
+  const checkAnimalDisposition = (dispositionDesc) => {
+    // split the animal dispositions
+    const animalDispositions = animal.animalDisposition.split(",");
+    // if the disposition is currently in the array, then return true
+    if (animalDispositions.includes(dispositionDesc)) {
+      return true;
+    } 
+    return false;
+  }
+
   // THIS IS WHERE THE PUT REQUEST WILL GO 
   // Please feel free to ammend in any way that works for middleware integration
   //
   const onSubmit = async data => {
+
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("animal_type", data.animal_type);
+    formData.append("animal_breed", data.animal_breed);
+    formData.append("animal_disposition", data.animal_disposition);
     console.log(data);
     try {
       console.log(animal.animal_id);
@@ -119,6 +136,7 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Animal must be leashed at all times" 
+            defaultChecked={checkAnimalDisposition("Animal must be leashed at all times")}
             {...register("animal_disposition")}
         />
         Animal must be leashed at all times
@@ -127,6 +145,7 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Good with other animals" 
+            defaultChecked={checkAnimalDisposition("Good with other animals")}
             {...register("animal_disposition2")}
         />
         Good with other animals
@@ -135,6 +154,7 @@ function EditAnimalForm({ animal }) {
         <input 
             type="checkbox" 
             value="Good with children" 
+            defaultChecked={checkAnimalDisposition("Good with children")}
             {...register("animal_disposition3")}
         />
         Good with children

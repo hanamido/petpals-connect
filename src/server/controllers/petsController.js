@@ -78,7 +78,11 @@ function editAnimalDisposition(animalId, dispositionName) {
 function editAnimalBreed(animalId, breedName) {
     return `UPDATE Animal_Breeds SET
     animal_id = ${animalId},
-    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = ${breedName});`;
+    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = "${breedName}");`;
+}
+
+function editOtherAnimalBreed(animalId, breedName) {
+    
 }
 
 function searchByType(typeName) {
@@ -121,6 +125,10 @@ function searchByDisposition(dispositionDesc) {
     GROUP BY animal_id;`;
 }
 
+function checkIfDispositionWithAnimal() {
+    return `SELECT * FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ?;`;
+}
+
 let animalsQueries = {
     showAllAnimalsQuery: 'SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ", ") as animalDisposition \
 	FROM ((Animals \
@@ -152,4 +160,5 @@ module.exports = {
     searchByType: searchByType,
     searchByBreed: searchByBreed,
     searchByDisposition: searchByDisposition,
+    checkIfDispositionWithAnimal: checkIfDispositionWithAnimal,
 }
