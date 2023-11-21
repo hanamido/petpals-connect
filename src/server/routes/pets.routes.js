@@ -17,7 +17,8 @@ const {
   editAnimalBreed, 
   editAnimalDisposition, 
   searchByType, searchByBreed, searchByDisposition,
-  checkIfDispositionWithAnimal
+  checkIfDispositionWithAnimal,
+  editOtherAnimalBreed
 } = require('../controllers/petsController');
 
 // Database stuff
@@ -270,7 +271,7 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
   let id = req.params.animal_id;
   let name = data['name'];
   let animal_type = data['animal_type'];
-  let picture = data['picture'];
+  let picture = req.file.path;
   let animal_availability = data['animal_availability'];
   let animal_description = data['animal_description'];
   let disposition1 = data['animal_disposition'];
@@ -280,6 +281,10 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
   let dispositionsToAdd = [];
   let dispositionsToDelete = [];
   let values;
+
+  // Update the image with its URL so it can be displayed
+  const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
+  picture = imageUrl;
 
   values = [disposition1, id];
   let firstCheckQuery = checkIfDispositionWithAnimal();
@@ -316,7 +321,8 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
         else {
           // if that breed doesn't exist, insert it as "Other"
           if (result.length === 0) {
-            let query3 = editAnimalBreed(id, "Other");
+            animal_breed = "Other";
+            let query3 = editOtherAnimalBreed(id, animal_breed, animal_type);
             db.pool.query(query3, function(error, result, fields) {
               if (error) { console.log(error); }
               else {

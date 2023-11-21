@@ -16,6 +16,7 @@ function EditAnimalForm({ animal }) {
     animal_disposition2: yup.string(),
     animal_disposition3: yup.string(),
     animal_description: yup.string(),
+    picture: yup.mixed(),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -50,8 +51,13 @@ function EditAnimalForm({ animal }) {
     formData.append("name", data.name);
     formData.append("animal_type", data.animal_type);
     formData.append("animal_breed", data.animal_breed);
-    formData.append("animal_disposition", data.animal_disposition);
-    console.log(data);
+    formData.append("animal_disposition1", data.animal_disposition1);
+    formData.append("animal_disposition2", data.animal_disposition2);
+    formData.append("animal_disposition3", data.animal_disposition3);
+    formData.append("animal_description", data.animal_description);
+    formData.append("animal_availability", data.animal_availability);
+    formData.append("picture", data.picture[0]);
+
     try {
       console.log(animal.animal_id);
         // change API endpoint as needed 
@@ -59,9 +65,9 @@ function EditAnimalForm({ animal }) {
             mode: 'cors',
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json',
+              'Accept': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: formData,
           })
     
           if (!response.ok) {
@@ -137,7 +143,7 @@ function EditAnimalForm({ animal }) {
             type="checkbox" 
             value="Animal must be leashed at all times" 
             defaultChecked={checkAnimalDisposition("Animal must be leashed at all times")}
-            {...register("animal_disposition")}
+            {...register("animal_disposition1")}
         />
         Animal must be leashed at all times
     </label>

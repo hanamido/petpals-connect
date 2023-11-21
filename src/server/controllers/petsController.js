@@ -76,13 +76,16 @@ function editAnimalDisposition(animalId, dispositionName) {
 }
 
 function editAnimalBreed(animalId, breedName) {
-    return `UPDATE Animal_Breeds SET
-    animal_id = ${animalId},
-    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = "${breedName}");`;
+    return `UPDATE Animal_Breeds SET \
+    breed_id = (SELECT breed_id FROM Breeds WHERE \ breed_name = "${breedName}") \
+    WHERE animal_id = ${animalId};`;
 }
 
-function editOtherAnimalBreed(animalId, breedName) {
-    
+function editOtherAnimalBreed(animalId, breedName, typeName) {
+    return `UPDATE Animal_Breeds SET \
+    breed_id = (SELECT breed_id FROM Breeds WHERE breed_name = "${breedName}" AND type_id = (SELECT\
+        type_id FROM Types WHERE type_name = "${typeName}")) \
+        WHERE animal_id = ${animalId}`;
 }
 
 function searchByType(typeName) {
@@ -161,4 +164,5 @@ module.exports = {
     searchByBreed: searchByBreed,
     searchByDisposition: searchByDisposition,
     checkIfDispositionWithAnimal: checkIfDispositionWithAnimal,
+    editOtherAnimalBreed: editOtherAnimalBreed,
 }
