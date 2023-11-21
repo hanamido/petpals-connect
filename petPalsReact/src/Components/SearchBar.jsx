@@ -10,34 +10,13 @@ import { useNavigate } from "react-router-dom";
 function SearchBar() {
     const [searchValue, setSearchValue]=useState('');
     const [searchCategory, setSearchCategory] = useState('type');
-    const navigate = useNavigate();
-    const submitSearch = async () => {
-        console.log("search", searchValue);
-        try {
-          let headers = new Headers();
-    
-          headers.append('Content-Type', 'application/json');
-          headers.append('Accept', 'application/json');
-    
-          // change API endpoint as needed 
-          const response = await fetch(`http://localhost:3000/pets/search/type?${searchCategory}=${searchValue}`, {
-              mode: 'cors',
-              method: 'GET',
-              headers: headers,
-            })
-  
-            if (!response.ok) {
-              throw new Error(`Error: ${response.status}`);
-            }
-      
-            const result = await response.json();
-            console.log("finished searching by type");
-            navigate('/searchResults', {state:{searchValue, searchCategory}});
+    const [searchResults, setSearchResults] = useState([]);
+    const [didPressReset, setDidPressReset] = useState(false);
 
-        } catch (error) {
-            alert("Submission failed. Please try again.")
-          console.error('Error with form submission', error);
-        }
+    const navigate = useNavigate();
+    const submitSearch = () => {
+        console.log("search", searchValue);
+        navigate('/searchResults', {state:{ searchValue, searchCategory }});
     }
 
       return (

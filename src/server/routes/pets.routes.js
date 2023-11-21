@@ -64,7 +64,7 @@ petsRouter.get("/search/type", (req, res) => {
 
 petsRouter.get("/search/breed", (req, res) => {
   // Display search results when user searches by breed
-  const breed = req.query;
+  const breed = req.query.breed;
   let searchBreed;
 
   // check for the breed
@@ -101,7 +101,7 @@ petsRouter.get("/search/breed", (req, res) => {
 
 petsRouter.get("/search/disposition", (req, res) => {
   // Display search results when user searches by disposition
-  const disposition = req.query;
+  const disposition = req.query.disposition;
 
   // Construct the query
   let query1 = searchByDisposition(disposition);
