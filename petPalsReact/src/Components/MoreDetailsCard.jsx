@@ -4,7 +4,7 @@ import noImage from "../images/noImage.jpeg";
 
 
 
-export default function AnimalCard(props) {
+export default function MoreDetailsCard(props) {
   const navigate = useNavigate();
     const {imgSrc, animalName, animalType, animalBreed, animalDisposition, animalAvailability, animalDescription} = props;
     const moreDetails = (animal) => {
@@ -15,7 +15,7 @@ export default function AnimalCard(props) {
     e.target.src = noImage; 
   }
   return (
-    <div className="animalCard">
+    <div className="moreDetailsCard">
       <img
         src={imgSrc}
         alt="Animal photo"
@@ -24,14 +24,14 @@ export default function AnimalCard(props) {
       />
       <h2 className="animalCardTitle">{animalName}</h2>
       <p className="animalCardText">
-        A little bit about {animalName}:
+        More about {animalName}:
        <ul>
         <li>Animal Type:  {animalType}</li>
         <li>Animal Breed:  {animalBreed}</li>
         <li>Animal Disposition: {animalDisposition}</li>
         <li>Availability: {animalAvailability}</li>
+        <li>Description: {animalDescription}</li>
         </ul>
       </p>
-      <button  onClick={(e)=>{moreDetails(props)}}>Learn more about {animalName}</button>
     </div>
   );}
