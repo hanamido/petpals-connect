@@ -17,11 +17,8 @@ function AddAnimalForm() {
     animal_disposition2: yup.string(),
     animal_disposition3: yup.string(),
     animal_description: yup.string(),
-    picture: yup
-      .mixed(),
-      // .test('fileType', 'Invalid file type', (value) => {
-      //   return value && ['image.jpeg', 'image.jpg', 'image.png'].includes(value.type);
-      // }),
+    picture: yup.mixed().required("Animal photo is required").test("fileSize", "Please include photo", (value) => {
+      return value && value[0] && value[0].size <= 2000000;}),
     animal_availability: yup
       .string()
       .required("Animal availability is required"),
@@ -55,20 +52,6 @@ function AddAnimalForm() {
     try {
       let headers = new Headers();
       headers.append('Accept', 'application/json');
-
-        // change API endpoint as needed 
-        // const response = await fetch('http://localhost:3000/pets/upload-pic', {
-        //   mode: 'cors',
-        //   method: 'POST',
-        //   headers: headers,
-        //   body: formData
-        // })
-        // const imageData = await response.json();
-        // console.log(imageData);
-
-        // // add the image to data
-        // data.picture = imageData.imagePath;
-        // console.log(data);
 
         const addResponse = await fetch('http://localhost:3000/pets/add', {
           mode: 'cors',
@@ -192,14 +175,14 @@ function AddAnimalForm() {
         />
         </div>
         <div className="input">
-          <label>Upload photo (optional): </label>
+          <label>Upload photo: </label>
           <input
             type="file"
             name="picture"
-            placeholder="Upload photo (optional)"
             {...register("picture")}
             className="input"
           />
+          <p>{errors.picture?.message}</p>
         </div>
         <input type="submit" className="submitButton"/>
       </form>
