@@ -71,6 +71,10 @@ SELECT type_name FROM Types WHERE type_id = given_type_id;
 -- Admin user types in info into input elements and selects from dropdowns
 INSERT INTO Animals (name, picture, description, animal_type, animal_availability) VALUES (:name_input, :picture_input, :description_input, :animal_type_dropdown, :animal_availability_dropdown);
 
+-- CREATE: Add new animal given the animal_type input and availability input
+INSERT INTO Animals (name, animal_type, picture, animal_availability, description)
+VALUES (:name_input, (SELECT type_id FROM Types WHERE type_name = :description), :image_input, (SELECT availability_id FROM Availability_Options WHERE description = :availability_input), :description_input)
+
 -- READ: Get all info in Animals table
 SELECT * FROM Animals;
 
@@ -81,6 +85,28 @@ UPDATE Animals SET name = :name_input, animal_type = :animal_type_dropdown, pict
 -- DELETE: Delete an animal
 -- Admin user finds animal from table and selects delete button
 DELETE FROM Animals WHERE animal_id = :animal_id_associated_to_delete_button;
+
+-- READ: Show animals, their type, their breed, their availability, and their dispositions (as one property)
+SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ', ') as animalDisposition 
+	FROM ((Animals
+          INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id)
+          INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
+          INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id
+          INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
+         INNER JOIN Types ON Animals.animal_type = Types.type_id
+         group by animal_id;
+
+-- READ: Show an animal based on the animal_id
+SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ', ') as animalDisposition
+	FROM ((Animals
+          INNER JOIN Animal_Breeds ON Animal_Breeds.animal_id = Animals.animal_id)
+          INNER JOIN Breeds ON Animal_Breeds.breed_id = Breeds.breed_id
+          INNER JOIN Animal_Dispositions on Animal_Dispositions.animal_id = Animals.animal_id
+          INNER JOIN Dispositions ON Animal_Dispositions.disposition_id = Dispositions.disposition_id
+         INNER JOIN Availability_Options ON Animals.animal_availability = Availability_Options.availability_id)
+         INNER JOIN Types ON Animals.animal_type = Types.type_id
+         WHERE Animals.animal_id = :animal_id_in_request;
 
 
 -- -----------------------------------------------------

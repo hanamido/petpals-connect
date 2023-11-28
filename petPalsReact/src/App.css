@@ -20,10 +20,14 @@
   align-items: center;
 }
 
-.Navbar .Left {
+.Navbar .Left a {
   flex: 10%;
   background-color: #aa00e6;
   justify-content: left;
+  font-family: "Roboto";
+  font-size: large;
+  font-weight: bold;
+  color: white;
 }
 
 .Navbar .Center {
@@ -62,8 +66,9 @@
 }
 
 .comingSoon {
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  border-radius: 1rem;
+  margin: 20px;
 }
 
 .icons {
@@ -81,10 +86,141 @@
   height: 10px;
   width: 10px;
 }
+
+.animalCard {
+  width: 20rem;
+  border-radius: 1rem;
+  box-shadow: 0px 10px 8px #999;
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+  background-color: white;
+  height: fit-content;
+}
+
+.moreDetailsCard {
+  width: 40rem;
+  border-radius: 1rem;
+  box-shadow: 0px 10px 8px #999;
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+  background-color: white;
+  height: fit-content;
+}
+
+.homePagePic {
+border-radius: 1rem;
+box-shadow: 0px 10px 8px #999;
+
+}
+
+.animalCardImg {
+  width: 100%;
+  border-radius: 1rem 1rem 0 0;
+  object-fit: cover;
+}
+
+.animalCardTitle {
+  margin: 0.5rem 5%;
+}
+
+.animalCardText {
+  margin: 0.5rem 5%;
+}
+
+.cardList {
+  width: 90vw;
+  max-width: 1170px;
+  margin: 5rem auto;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.Form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+}
+
+.submitButton {
+  display: flex;
+  flex-direction: column;
+  color: #aa00e6;
+  background-color: white;
+  border-color:#aa00e6;
+  border-width: 3px;
+  margin: 10px;
+  align-items: center;
+}
+
+.editTable {
+margin: 20px auto;
+width: 80%;
+border-collapse: collapse;
+}
+
+.editTable td, .editTable th {
+border: 1px solid;
+padding: 8px;
+}
+
+.checkboxContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid transparent;
+  padding: 0.6em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  border-color: #e7d5ef;
+  border-width: 3px;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  background-color: white;
+  border-style: solid;
+  align-items: center;
+  font-family: "Roboto";
+  border-radius: 10px;
+
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px; 
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 5px; 
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+}
+
 a {
   display: inline-block;
 }
-a:hover, button:hover {
+a:hover,
+button:hover,
+.animalCard:hover {
   transform: scale(1.1);
 }
 input {
@@ -95,13 +231,40 @@ input {
   padding-left: 10px;
 }
 
+select, input {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  border-color: #e7d5ef;
+  border-width: 3px;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+
+
 @media only screen and (max-width: 700px) {
   .Navbar .Center .pageLinks a {
     font-size: 15px;
   }
 }
+
 @media only screen and (max-width: 600px) {
-  .Navbar .Center .pageLinks a {
+  .Navbar .Center .pageLinks .cardList a {
     font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .cardList {
+     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .cardList{
+  grid-template-columns: repeat(1, 1fr);
   }
 }
