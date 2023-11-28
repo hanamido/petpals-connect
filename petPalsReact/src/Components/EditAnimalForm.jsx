@@ -32,9 +32,9 @@ function EditAnimalForm({ animal }) {
   } = useForm({ resolver: yupResolver(addSchema) });
 
   // Check whether the animal disposition is checked or not
-  const checkAnimalDisposition = (dispositionDesc) => {
+  function checkAnimalDisposition(dispositionDesc) {
     // split the animal dispositions
-    const animalDispositions = animal.animalDisposition.split(",");
+    const animalDispositions = animal.animalDisposition.split(", ");
     // if the disposition is currently in the array, then return true
     if (animalDispositions.includes(dispositionDesc)) {
       return true;
@@ -166,7 +166,7 @@ function EditAnimalForm({ animal }) {
         Good with children
     </label>
     </div>
-        <p>{errors.animal_disposition?.message}</p>
+        <p>{errors.animal_disposition1?.message}</p>
 
       
         <div className="input">

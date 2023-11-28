@@ -3,6 +3,7 @@ const multer = require('multer');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { 
   animalsQueries, 
   showOneAnimalQuery, 
@@ -15,11 +16,17 @@ const {
   checkType, 
   editAnimalQuery, 
   editAnimalBreed, 
-  editAnimalDisposition, 
+  deleteOneAnimalDisposition,
+  deleteTwoAnimalDispositions,
+  deleteThreeAnimalDispositions,
   searchByType, searchByBreed, searchByDisposition,
-  checkIfDispositionWithAnimal,
   editOtherAnimalBreed
 } = require('../controllers/petsController');
+
+// Specific controller to edit animals
+const {
+  checkDisposition,
+} = require('../controllers/editPetsController');
 
 // Database stuff
 const db = require('../database/db-connector');
@@ -30,7 +37,6 @@ const petsRouter = express.Router();
 petsRouter.use('/uploads', express.static(path.join(__dirname, '../../../animal-uploads')));
 
 // Set up multer for file uploads
-// const storage = multer.memoryStorage();
 
 const storage = multer.diskStorage({
   destination: 'animal-uploads', 
@@ -274,36 +280,104 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
   let picture = req.file.path;
   let animal_availability = data['animal_availability'];
   let animal_description = data['animal_description'];
-  let disposition1 = data['animal_disposition'];
+  let disposition1 = data['animal_disposition1'];
   let disposition2 = data['animal_disposition2'];
   let disposition3 = data['animal_disposition3'];
   let animal_breed = data['animal_breed'];
   let dispositionsToAdd = [];
   let dispositionsToDelete = [];
-  let values;
+  let addValues;
+  let deleteValues;
+  let dispAddQuery;
+  let dispDeleteQuery;
+
+  // store animal dispositions so we can compare (since unchecked dispositions are just sent as "false")
+  const dispositions = {
+    disp1: "Animal must be leashed at all times",
+    disp2: "Good with other animals",
+    disp3: "Good with children"
+  }
 
   // Update the image with its URL so it can be displayed
   const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
   picture = imageUrl;
 
-  values = [disposition1, id];
-  let firstCheckQuery = checkIfDispositionWithAnimal();
-  db.pool.query(firstCheckQuery, values, function(error, result, fields) {
-    if (error) { console.log(error); }
+  // first do checks with disposition1
+  checkDisposition(id, disposition1, dispositions.disp1, dispositionsToAdd, dispositionsToDelete, function(error, result1) {
+    if (error) { console.error(error) }
     else {
-      //if the disposition is not yet associated with the animal yet and it is checked
-      if (result.length === 0 && disposition1 !== "false") {
-        dispositionsToAdd.push(disposition1);
-      }
-      // if the disposition is associated with the animal but it is unchecked
-      else if (result.length > 0 && disposition1 === "false") {
-        dispositionsToDelete.push(disposition1);
-      }
+      dispositionsToAdd = result1.toAdd;
+      dispositionsToDelete = result1.toDelete;
+      // then do checks with disposition2 to check if we need to add or delete it, etc.
+      checkDisposition(id, disposition2, dispositions.disp2, result1.toAdd, result1.toDelete, function(error, result2) {
+        if (error) { console.error(error) }
+        else {
+          // check disposition3
+          checkDisposition(id, disposition3, dispositions.disp3, result2.toAdd, result2.toDelete, function(error, result3) {
+            if (error) { console.error(error) }
+            else {
+              dispositionsToAdd = result3.toAdd;
+              dispositionsToDelete = result3.toDelete;
+              console.log(dispositionsToAdd);
+              console.log(dispositionsToDelete);
+                // Check for length of dispositionsToAdd to see how many dispositions we need to add
+                const dispToAddLength = dispositionsToAdd.length;
+                if (dispToAddLength === 1) {
+                  addValues = [dispositionsToAdd[0]];
+                  dispAddQuery = addAnimalDispositionQuery(id);
+                } else if (dispToAddLength === 2) {
+                  addValues = [dispositionsToAdd[0], dispositionsToAdd[1]];
+                  dispAddQuery = addTwoAnimalDispositionQuery(id);
+                } else if (dispToAddLength === 3) {
+                  addValues = [dispositionsToAdd[0], dispositionsToAdd[1], dispositionsToAdd[2]];
+                  dispAddQuery = addThreeAnimalDispositionQuery(id);
+                } 
+                
+                // TODO: Check for length of dispositionsToDelete to see how many dispositions we need to delete
+                const dispToDeleteLength = dispositionsToDelete.length;
+                if (dispToDeleteLength === 1) {
+                  deleteValues = [dispositionsToDelete[0]];
+                  dispDeleteQuery = deleteOneAnimalDisposition(id);
+                } else if (dispToDeleteLength === 2) {
+                  deleteValues = [dispositionsToDelete[0]], dispositionsToDelete[1];
+                  dispDeleteQuery = deleteTwoAnimalDispositions(id);
+                } else if (dispToDeleteLength === 3) {
+                  deleteValues = [dispositionsToDelete[0], dispositionsToDelete[1], dispositionsToDelete[2]];
+                  dispDeleteQuery = deleteThreeAnimalDispositions(id);
+                } 
+
+                // add values if there are dispositions to add
+                if (addValues && dispAddQuery) {
+                  db.pool.query(dispAddQuery, addValues, function(error, result, fields) {
+                    if (error) { console.log(error); }
+                    else {
+                      console.log("Successfully added dispositions: ", dispositionsToAdd);
+                    }
+                  })
+                } 
+                // if there are no values to add
+                else {
+                  console.log("No dispositions to add.");
+                }
+
+                if (deleteValues && dispDeleteQuery) {
+                  db.pool.query(dispDeleteQuery, deleteValues, function(error, result, fields) {
+                    if (error) { console.log(error); }
+                    else {
+                      console.log("Successfully deleted dispositions: ", dispositionsToDelete);
+                    }
+                  })
+                } 
+                // if there are no dispositions to delete
+                else {
+                  console.log("No dispositions to delete.");
+                }
+            }
+          })
+        }
+      })
     }
   })
-
-  console.log("To add: ", dispositionsToAdd);
-  console.log("To delete: ", dispositionsToDelete);
 
   // Declare general edit query
   let query1 = editAnimalQuery(id, name, animal_type, picture, animal_availability, animal_description);
@@ -348,13 +422,36 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
 
 petsRouter.delete("/delete/:animal_id", (req, res) => {
   // Delete a pet given the animal ID
-  // Send the new pet data to frontend
+  // first retrieve the pet associated with the animal_id
+  let getQuery = showOneAnimalQuery(req.params.animal_id);
   let deleteQuery = deleteAnimalQuery(req.params.animal_id)
-  db.pool.query(deleteQuery, function (error, result, fields) {
-    if (error) {
-      console.log(error);
-    } else {
-      res.send(result);
+  db.pool.query(getQuery, function(error, result, fields) {
+    if (error) { console.log(error); }
+    else {
+      // get the associated picture and delete it from the directory
+      console.log(result);
+      console.log(result[0].imgSrc);
+      // imgSrc in the form of: 'http://localhost:3000/pets/uploads/<img_name>.png' 
+      const imgSrc = result[0].imgSrc;
+      const imgFile = imgSrc.split('/');
+      const imgName = imgFile[5];
+      // const imgToDelete = (`../../../animal-uploads/${imgName}`);
+      const imagePath = path.join(__dirname, "../../../animal-uploads", imgName);
+      console.log(imagePath);
+      fs.unlink(imagePath, (err) => {
+        if (err) { throw err; }
+        else { 
+          console.log('Image was deleted successfully!'); 
+          // then delete the pet associated with the animal_id
+          db.pool.query(deleteQuery, function (error, result, fields) {
+            if (error) {
+              console.log(error);
+            } else {
+              res.send(result);
+            }
+          })
+        }
+      })
     }
   })
 })
