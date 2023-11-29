@@ -1,1 +1,0 @@
-const amqplib = require('amqplib/callback_api');

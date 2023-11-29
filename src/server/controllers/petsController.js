@@ -1,3 +1,7 @@
+const dotenv = require('dotenv').config();
+// Database stuff
+const db = require('../database/db-connector');
+
 function showOneAnimalQuery(animalId) {
     return `SELECT Animals.animal_id, Animals.name as animalName, Types.type_name as animalType, Breeds.breed_name as animalBreed, Animals.picture as imgSrc, Availability_Options.description as animalAvailability, Animals.description as animalDescription, GROUP_CONCAT(Dispositions.description SEPARATOR ', ') as animalDisposition \
 	FROM ((Animals \
@@ -70,9 +74,19 @@ function editAnimalQuery(animalId, animalName, animalType, animalPicture, animal
     WHERE animal_id = ${animalId};`
 }
 
-function editAnimalDisposition(animalId, dispositionName) {
-    return `UPDATE Animal_Dispositions SET 
-        `
+function deleteOneAnimalDisposition(animalId) {
+    return `DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId};`;
+}
+
+function deleteTwoAnimalDispositions(animalId) {
+    return `DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId}; \
+    DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId};`;
+}
+
+function deleteThreeAnimalDispositions(animalId) {
+    return `DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId}; \
+    DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId}; \
+    DELETE FROM Animal_Dispositions WHERE disposition_id = (SELECT disposition_id FROM Dispositions WHERE description = ?) AND animal_id = ${animalId};`;
 }
 
 function editAnimalBreed(animalId, breedName) {
@@ -159,7 +173,9 @@ module.exports = {
     checkType: checkType,
     editAnimalQuery: editAnimalQuery,
     editAnimalBreed: editAnimalBreed,
-    editAnimalDisposition: editAnimalDisposition,
+    deleteOneAnimalDisposition: deleteOneAnimalDisposition,
+    deleteTwoAnimalDispositions: deleteTwoAnimalDispositions,
+    deleteThreeAnimalDispositions: deleteThreeAnimalDispositions,
     searchByType: searchByType,
     searchByBreed: searchByBreed,
     searchByDisposition: searchByDisposition,
