@@ -15,10 +15,10 @@ const [animals, setAnimals] = useState([]);
 
   headers.append('Content-Type', 'application/json');
   headers.append('Accept', 'application/json');
-  headers.append('Origin','http://localhost:3000');
+  headers.append('Origin','https://petpals-connect-service.onrender.com/');
 
   // Fetch animal data from server's API here
-  fetch("http://localhost:3000/pets", {
+  fetch("https://petpals-connect-service.onrender.com/pets", {
     mode: 'cors',
     method: 'GET',
     headers: headers
