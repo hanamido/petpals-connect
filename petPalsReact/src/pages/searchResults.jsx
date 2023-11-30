@@ -14,7 +14,7 @@ function SearchResults() {
   const{searchCategory} = location.state || {};
   
   const [animals, setAnimals] = useState([]);
-  const baseUrl = "http://localhost:3000/pets/search";
+  const baseUrl = "https://petpals-connect-service.onrender.com/pets/search";
   let url;
   // Setting up API endpoint with variables
   switch (searchCategory){

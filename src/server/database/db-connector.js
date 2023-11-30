@@ -4,10 +4,11 @@ const dotenv = require('dotenv');
 // Create 'connection pool' using the provided credentials
 var pool = mysql.createPool({
     connectionLimit: 10, 
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host: process.env.AWS_HOST,
+    user: process.env.AWS_USERNAME,
+    password: process.env.AWS_PASSWORD,
+    database: process.env.AWS_DB_NAME,
+    port: 3306,
     multipleStatements: true
 });
 

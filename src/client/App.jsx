@@ -14,7 +14,7 @@ function App() {
     <>
       <Navbar />
       <div className="comingSoon">
-        <h1>PetPals Connect...More coming soon!</h1>
+        <h1>PetPals Connect Service</h1>
       </div>
       <div className="comingSoon">
         <img src={ComingSoon} alt="Coming Soon"></img>

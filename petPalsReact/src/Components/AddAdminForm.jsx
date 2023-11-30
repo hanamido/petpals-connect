@@ -27,7 +27,7 @@ function AddAdminForm() {
     console.log(data);
     try {
         // change API endpoint as needed 
-        const response = await fetch('http://localhost:3000/admin/add', {
+        const response = await fetch('https://petpals-connect-service.onrender.com/admin/add', {
             mode: 'cors',
             method: 'POST',
             headers: {
