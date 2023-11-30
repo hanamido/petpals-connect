@@ -33,7 +33,7 @@ app.use('/admin', adminRouter);
 app.use('/', homeRouter);
 
 ViteExpress.listen(app, PORT, () =>
-  console.log("Server is listening on port 3000...")
+  console.log(`Server is listening on port ${PORT}...`)
 );
 
 module.exports = {
