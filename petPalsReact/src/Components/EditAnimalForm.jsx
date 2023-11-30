@@ -61,7 +61,7 @@ function EditAnimalForm({ animal }) {
     try {
       console.log(animal.animal_id);
         // change API endpoint as needed 
-        const response = await fetch(`http://localhost:3000/pets/edit/${animal.animal_id}`, {
+        const response = await fetch(`https://petpals-connect-service.onrender.com/pets/edit/${animal.animal_id}`, {
             mode: 'cors',
             method: 'PUT',
             headers: {

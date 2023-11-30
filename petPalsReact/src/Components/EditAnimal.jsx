@@ -40,7 +40,7 @@ function ViewAnimalData() {
         console.log(data);
         try {
             // change API endpoint and animal.id variable as needed 
-            const response = await fetch(`http://localhost:3000/pets/delete/${data.animal_id}`, {
+            const response = await fetch(`https://petpals-connect-service.onrender.com/pets/delete/${data.animal_id}`, {
                 mode: 'cors',
                 method: 'DELETE',
                 headers: {

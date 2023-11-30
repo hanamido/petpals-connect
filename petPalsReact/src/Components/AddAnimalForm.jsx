@@ -53,7 +53,7 @@ function AddAnimalForm() {
       let headers = new Headers();
       headers.append('Accept', 'application/json');
 
-        const addResponse = await fetch('http://localhost:3000/pets/add', {
+        const addResponse = await fetch('https://petpals-connect-service.onrender.com/pets/add', {
           mode: 'cors',
           method: 'POST',
           headers: headers,

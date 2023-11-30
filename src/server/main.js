@@ -4,9 +4,7 @@ const axios = require('axios');
 // const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require(
-  'path'
-);
+const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
   origin: '*', 
@@ -34,7 +32,7 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 app.use('/', homeRouter);
 
-ViteExpress.listen(app, 3000, () =>
+ViteExpress.listen(app, PORT, () =>
   console.log("Server is listening on port 3000...")
 );
 

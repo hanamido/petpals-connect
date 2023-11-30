@@ -174,11 +174,11 @@ petsRouter.post("/add", upload.single('picture'), (req, res) => {
   let values = [];
 
   // Update the image with its URL so it can be displayed
-  const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
+  const imageUrl = `https://petpals-connect-service.onrender.com/pets/uploads/${req.file.filename}`; 
   picture = imageUrl;
 
   // Create the general add query and run it on the db
-  let addQuery = addAnimalQuery(name, animal_type, picture, animal_availability, animal_description);
+  let addQuery = addAnimalQuery(name, animal_type, imageUrl, animal_availability, animal_description);
 
   db.pool.query(addQuery, function(error, result, fields) {
     if (error) {
@@ -299,7 +299,7 @@ petsRouter.put("/edit/:animal_id", upload.single('picture'), (req, res) => {
   }
 
   // Update the image with its URL so it can be displayed
-  const imageUrl = `http://localhost:3000/pets/uploads/${req.file.filename}`; 
+  const imageUrl = `https://petpals-connect-service.onrender.com/pets/uploads/${req.file.filename}`; 
   picture = imageUrl;
 
   // first do checks with disposition1
