@@ -178,7 +178,7 @@ petsRouter.post("/add", upload.single('picture'), (req, res) => {
   picture = imageUrl;
 
   // Create the general add query and run it on the db
-  let addQuery = addAnimalQuery(name, animal_type, imageUrl, animal_availability, animal_description);
+  let addQuery = addAnimalQuery(name, animal_type, picture, animal_availability, animal_description);
 
   db.pool.query(addQuery, function(error, result, fields) {
     if (error) {
