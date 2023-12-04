@@ -18,7 +18,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.AUTH0_SECRET,
-  baseURL: 'https://petpals-connect.onrender.com',
+  baseURL: 'https://petpals-connect-service.onrender.com',
   clientID: '4IUw5SmUB0lFu7jlSJYtCMMICcB8u3VT',
   issuerBaseURL: 'https://petpals-connect.us.auth0.com'
 };
