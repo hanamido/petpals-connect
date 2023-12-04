@@ -23,6 +23,8 @@ const config = {
   issuerBaseURL: 'https://petpals-connect.us.auth0.com'
 };
 
+const app = express();
+
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
@@ -31,8 +33,6 @@ app.get('/user-login', (req, res) => {
   console.log("user is logged in");
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
-
-const app = express();
 
 app.use(cors(corsOptions));
 
