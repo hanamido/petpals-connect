@@ -52,14 +52,6 @@ function LoginForm() {
           console.error('Error with form submission', error);
         }
     }
-
-    const loginWithAuth0 = async () => {
-      try {
-        window.location.href = 'https://petpals-connect-service.onrender.com/login'
-      } catch (error) {
-        console.error(error);
-      }
-    }
 /// END INTEGRATION SECTION
 
   return (
@@ -94,7 +86,6 @@ function LoginForm() {
 
         <input type="submit" className="submitButton"/>
       </form>
-      <button className="submitButton" onClick={loginWithAuth0}>Login with Auth0</button>
     </div>
   );
 }

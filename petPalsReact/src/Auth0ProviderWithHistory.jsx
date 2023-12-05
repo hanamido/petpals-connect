@@ -3,8 +3,8 @@ import React from 'react';
 import { Auth0Provider } from '@auth0/auth0-react';
 
 const Auth0ProviderWithHistory = ({ children }) => {
-  const domain = '4IUw5SmUB0lFu7jlSJYtCMMICcB8u3VT';
-  const clientId = 'https://petpals-connect.us.auth0.com';
+  const domain = 'petpals-connect.us.auth0.com';
+  const clientId = 'jSr7nJ0uSiqOnaALA6FQ6oDMYEJN3KyC';
 
   return (
     <Auth0Provider

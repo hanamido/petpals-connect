@@ -3,7 +3,6 @@ import "../App.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useAuth0 } from "@auth0/auth0-react";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
@@ -30,9 +29,9 @@ function CreateAccountForm() {
     console.log(data);
     try {
         //Auth0 integration - password handling
-        const response = await fetch('https://petpals-connect-service.onrender.com/login', {
+        const response = await fetch('https://petpals-connect-service.onrender.com/users/add', {
             mode: 'cors',
-            method: 'GET',
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',

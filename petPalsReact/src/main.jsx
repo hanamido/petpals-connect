@@ -7,6 +7,8 @@ import Auth0ProviderWithHistory from './Auth0ProviderWithHistory';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <Auth0ProviderWithHistory>
+      <App />
+    </Auth0ProviderWithHistory>
   </React.StrictMode>,
 )
