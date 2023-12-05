@@ -3,6 +3,7 @@ import "../App.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Auth0Provider } from '@auth0/auth0-react';
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
