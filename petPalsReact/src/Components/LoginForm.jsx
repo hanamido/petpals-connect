@@ -3,10 +3,12 @@ import "../App.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 
 function LoginForm() {
+
     //Auth0 can change schema as needed
   const addSchema = yup.object().shape({
     first_name: yup.string().required("First name is required"),
@@ -50,6 +52,14 @@ function LoginForm() {
           console.error('Error with form submission', error);
         }
     }
+
+    const loginWithAuth0 = async () => {
+      try {
+        window.location.href = 'https://petpals-connect-service.onrender.com/login'
+      } catch (error) {
+        console.error(error);
+      }
+    }
 /// END INTEGRATION SECTION
 
   return (
@@ -84,6 +94,7 @@ function LoginForm() {
 
         <input type="submit" className="submitButton"/>
       </form>
+      <button className="submitButton" onClick={loginWithAuth0}>Login with Auth0</button>
     </div>
   );
 }

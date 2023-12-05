@@ -30,7 +30,7 @@ function CreateAccountForm() {
     console.log(data);
     try {
         //Auth0 integration - password handling
-        const response = await fetch('http://localhost:3000/admin/add', {
+        const response = await fetch('https://petpals-connect-service.onrender.com/login', {
             mode: 'cors',
             method: 'POST',
             headers: {
