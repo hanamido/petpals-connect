@@ -17,7 +17,7 @@ const { auth } = require('express-openid-connect');
 const config = {
   authRequired: false,
   auth0Logout: true,
-  secret: process.env.AUTH0_SECRET,
+  secret: 'hHkbEf9BeD6SQaJKoqaddhOF8AaeogkAv1FyW_xfQvL-ye_gIw3Fv3BJU0q-0Qmw',
   baseURL: 'https://petpals-connect-service.onrender.com',
   clientID: '4IUw5SmUB0lFu7jlSJYtCMMICcB8u3VT',
   issuerBaseURL: 'https://petpals-connect.us.auth0.com'
