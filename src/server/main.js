@@ -12,7 +12,7 @@ const corsOptions = {
   optionSuccessStatus: 200,
 }
 
-// const { auth } = require('express-openid-connect');
+const { auth } = require('express-openid-connect');
 
 const config = {
   authRequired: false,
