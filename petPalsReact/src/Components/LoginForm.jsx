@@ -3,7 +3,6 @@ import "../App.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import axios from "axios";
 import bone from "../images/bone.svg";
 import user from "../images/user-regular.svg";
 

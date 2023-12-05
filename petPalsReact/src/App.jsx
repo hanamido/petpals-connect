@@ -14,11 +14,6 @@ import MoreDetails from "./pages/moreDetails";
 import SearchResults from "./pages/searchResults";
 import { useAuth0 } from "@auth0/auth0-react";
 function App() {
-  // checks if the user has been authenticated or not yet
-  const { isLoading } = useAuth0();
-
-  if (isLoading) return <div>Loading...</div>;
-
   return (
     <>
 
